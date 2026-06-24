@@ -1,9 +1,9 @@
 # Data Visualization and Reproducible Research
 
-> Firstname Lastname. 
+> Per Sander 
 
 
-The following is a sample of products created during the _"Data Visualization and Reproducible Research"_ course.
+The following are the 3 projects created for the data visualization class 
 
 
 ## Project 01
