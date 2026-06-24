@@ -1,0 +1,307 @@
+---
+title: "Data Visualization - Mini-Project 2"
+author: "Per Sander `psander6918@floridapoly.edu`"
+output:
+  html_document:
+    df_print: paged
+---
+# Data Visualization - Mini-Project 2
+## Legend
+[Library init and map data loading](#library-init-and-map-data-loading)
+
+[Data Loading and Summary](#data-loading-and-summary)
+
+[Graph 1](#graph-1)
+
+[Graph 2](#graph-2)
+
+[Graph 3](#graph-3)
+
+[Discussion](#discussion)
+
+## Library init and map data loading
+
+```{r load-libraries-data, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(plotly)
+library(sf)
+library(ggiraph) 
+library(tigris)
+library(data.table)
+library(glue)
+library(broom)
+
+# Load world shapefile from Natural Earth
+# https://www.naturalearthdata.com/downloads/110m-cultural-vectors/
+world_shapes <- read_sf("../data/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp")
+
+# ignore atk
+world_shapes <- filter(world_shapes, ISO_A3 != "ATA")
+
+
+#Repair data: set ISO_A3 for france and sweden (fill with ADM0_A3 value)
+world_shapes <- world_shapes %>% 
+  mutate(ISO_A3 = if_else(ISO_A3 == -99, ADM0_A3, ISO_A3))
+
+# Load states and provinces data
+# https://www.naturalearthdata.com/downloads/110m-cultural-vectors/
+us_counties_shapes <- read_sf("../data/ne_110m_admin_1_states_provinces/ne_110m_admin_1_states_provinces.shp")
+
+us_counties_shapes <- shift_geometry(us_counties_shapes, geoid_column = NULL, preserve_area = FALSE, position = c("below", "outside"))
+
+```
+
+## Data Loading and Summary
+
+```{r}
+marathon_csv = "../data/marathon_results_2017.csv"
+marathon_data = read.csv(marathon_csv)
+
+# change data from string to sec
+
+double_sec_to_string <- function(time) {
+  glue('{trunc(time/3600)}:{trunc((time %% 3600)/60)}:{trunc(time %% 60)}')
+}
+
+string_to_int_sec <-function(timeChar){
+  
+  timeChars <- strsplit(timeChar, ":")[[1]]
+  
+  if(length(timeChars) != 3){
+    return(NA)
+  }
+  
+  return(as.numeric(timeChars[1]) * 3600 + as.numeric(timeChars[2]) * 60 + as.numeric(timeChars[3]))
+}
+
+string_to_int_sec_vec <- Vectorize(string_to_int_sec)
+
+double_sec_to_string_vec <- Vectorize(double_sec_to_string)
+
+marathon_data <- marathon_data %>%
+  mutate(Official.Time.sec = string_to_int_sec_vec(Official.Time))
+
+# filtered marathon_data all rows with Country = USA
+marathon_data_USA <- marathon_data %>%
+  filter(Country == "USA")
+
+# Columns for which to display values
+columns <- c("Official.Time.sec", "Age", "Country","State", "City")
+
+sapply(marathon_data[columns], function(x) {
+  if(is.numeric(x)){
+    c(
+      Mean = mean(x, na.rm=TRUE),
+      stdDev=sd(x, na.rm=TRUE),
+      min=min(x, na.rm=TRUE),
+      max=max(x, na.rm=TRUE),
+      unique_count=length(unique(x)))
+  }else{
+    c(
+      Mean = NA,
+      stdDev=NA,
+      min=NA,
+      max=NA,
+      unique_count=length(unique(x)))
+  }  
+})
+
+glue("\nTotal entries:{nrow(marathon_data)}")
+
+```
+
+The marathon data contains data from the participants of the 2017 Boston marathon. The set contains multiple variables such as age, name, state, country, city, and various metrics for the marathon time. One minor problem with the time is that the datatype is a string (HH:MM:SS) and not an easily readable number. As such some data conversion from the string time value to a number was necessary. (total sec = HH*3600 + MM*60 + SS). The above summary shows some stats for time taken in sec, age, and the number of unique Countries, States and Cities participints are from. (For states there are also some foreign states in this metric, there are participants from every us state in the data set). For the analysis below I was interested in any visible overall trends rather then the individual performance. So grouping the data by country or state for US data was necessary. 
+
+## Graph 1
+
+```{r}
+# data prep 
+marathon_data_by_Country <- marathon_data %>%
+  group_by(Country) %>%
+  summarise(
+    nrParticipants = n(),
+    Avg_Time_Sec  = mean(Official.Time.sec, na.rm = TRUE),
+    SD_Time_Sec   = sd(Official.Time.sec, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(avg_time_formatted = double_sec_to_string_vec(Avg_Time_Sec))
+
+
+world_data <- left_join(world_shapes, marathon_data_by_Country, by=join_by(ISO_A3 == Country))
+
+# graph
+graph1 <- ggplot() +
+  geom_sf_interactive(data=world_data, aes(fill = nrParticipants, data_id = ISO_A3, tooltip=glue('{NAME}<br>Participants: {if_else(is.na(nrParticipants), 0, nrParticipants)}<br>average time: {avg_time_formatted}'))) +
+  theme_void() + 
+  labs(title = "Participants of the Boston marathon 2017", fill=NULL) + 
+  scale_fill_viridis_c(
+    trans = "log10",
+    limits = c(1, 20945)) + 
+  theme(legend.position = "bottom", legend.key.width = unit(3, "cm"))
+
+graph1_interactive <- girafe(ggobj = graph1)
+
+graph1a <- ggplot() +
+  geom_sf_interactive(data=world_data, aes(fill = Avg_Time_Sec, data_id = ISO_A3, tooltip=glue('{NAME}<br>Participants: {if_else(is.na(nrParticipants), 0, nrParticipants)}<br>average time: {avg_time_formatted}'))) +
+  theme_void() + 
+  labs(title = "Average Finish Time of the Boston marathon 2017", fill=NULL) + 
+  scale_fill_viridis_c(
+    option = "plasma",
+    direction = -1,
+    trans = "log10",
+    labels = double_sec_to_string) + 
+  theme(legend.position = "bottom", legend.key.width = unit(3, "cm"))
+
+graph1a_interactive <- girafe(ggobj = graph1a)
+
+```
+{.tabset}
+-------------------------------------
+   
+### Participants
+
+```{r, echo=FALSE}
+graph1_interactive
+```   
+ 
+### Average Time
+```{r, echo=FALSE}
+graph1a_interactive
+```   
+
+
+Graph 1 above shows an interactive graph of the number of participants and the average time for participants for each country. A countries name and stats can be seen by hovering over the name. The graph can be switched between visualizing participants and visualizing the average time by clicking on the respective tabs. In total there were participants of 91 different countries with the most coming from the USA. As a need of traveling to the marathon exists that is no real surprise. However, when switching to visualizing average time, Ethiopia, Kenya, and Burundi stand out with the lowest average time while also having very low participant numbers (Ethiopia: 5, Kenya: 8, and Burundi: 1).
+
+
+## Graph 2
+
+```{r}
+# data prep
+marathon_data_by_County <- marathon_data_USA %>%
+  group_by(State) %>%
+  summarise(
+    nrParticipants = n(),
+    Avg_Time_Sec  = mean(Official.Time.sec, na.rm = TRUE),
+    SD_Time_Sec   = sd(Official.Time.sec, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(avg_time_formatted = double_sec_to_string_vec(Avg_Time_Sec))
+
+
+county_data <- left_join(us_counties_shapes, marathon_data_by_County, by=join_by(postal == State))
+
+# graph 2 - participints
+graph2 <- ggplot() +
+  geom_sf_interactive(data=county_data, aes(fill = nrParticipants, data_id = postal, tooltip=glue('{woe_name}<br>Nr of Participants: {nrParticipants}<br>average time: {avg_time_formatted}'))) +
+  theme_void() + 
+  labs(title = "Participants from the USA of the Boston marathon 2017", fill=NULL) + 
+  scale_fill_viridis_c(
+    breaks=c(1, 100, 1000, 4000),
+    trans = "log10") + 
+  theme(legend.position = "bottom", legend.key.width = unit(3, "cm"))
+
+g_counties_highlight_participants <- girafe(ggobj = graph2)
+
+# graph 2 - average time by state
+graph2a <- ggplot() +
+  geom_sf_interactive(data=county_data, aes(fill = Avg_Time_Sec, data_id = postal, tooltip=glue('{woe_name}<br>Nr of Participants: {nrParticipants}<br>average time: {avg_time_formatted}'))) +
+  theme_void() + 
+  labs(title = "Average Finish Time from Participants of the USA of the Boston marathon 2017", fill=NULL) + 
+  scale_fill_viridis_c(
+    option = "plasma",
+    direction = -1,
+    #breaks=c(1, 100, 1000, 4000),
+    trans = "log10",
+    labels = double_sec_to_string) + 
+  theme(legend.position = "bottom", legend.key.width = unit(3, "cm"))
+
+g_counties_highlight_average_finish_time <- girafe(ggobj = graph2a)
+
+```
+
+{.tabset}
+-------------------------------------
+   
+### Participants
+
+```{r, echo=FALSE}
+g_counties_highlight_participants
+```   
+ 
+### Average Time
+```{r, echo=FALSE}
+g_counties_highlight_average_finish_time
+```   
+
+
+Graph 2 shows the same kind of values as Graph 1 but instead of showing those values for the world map, it shows those values for the USA. (Color values represent the same but the scale is different to visualize the differences between the states better). Just like before the location of the marathon, in this graph Massachusetts has with 4586 the most participants. When switching to visualizing the average time, it can clearly be seen that Massachusetts has the longest average time for the marathon (4:27:41) while Alaska has the best average time of 3:25:0 with just 52 participants.
+
+## Graph 3
+
+```{r}
+
+graph3 <- ggplot(data=world_data %>% filter(!is.na(nrParticipants) & nrParticipants>0), aes(y=Avg_Time_Sec, x=nrParticipants)) +
+  geom_point(aes(size = nrParticipants)) +
+  scale_size(trans = "log2", range=c(3, 10)) +
+  scale_x_log10()+
+  scale_y_continuous(labels = double_sec_to_string)+
+  labs(title='Nr of Participants vs average finish time by Country', y=NULL, x=NULL, size='Nr of Participants') + 
+  theme(
+    #panel.background = element_rect(fill = "honeydew4"),
+    #panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(0, 0, 0, 0, "cm"),
+    #panel.border = ()
+    ) + 
+  geom_smooth(method="lm") +   
+  geom_text_repel(color="blue",
+                  aes(label = ifelse(nrParticipants >= 1000 | Avg_Time_Sec <= 9960,ABBREV, "")),
+                  point.padding = unit(5, "lines"),
+                  box.padding = unit(0.5, "lines"),
+                  force = 2)
+
+participants_vs_avg_time = lm(Avg_Time_Sec ~ nrParticipants, data=world_data)
+
+coefs<- tidy(participants_vs_avg_time, conf.int = TRUE)
+
+graph3a <- ggplot(coefs,aes(x = estimate,y = fct_rev(term))) +
+  geom_pointrange(aes(xmin = conf.low,xmax = conf.high)) +
+  geom_vline(xintercept = 0,
+             color = "purple") +
+  #scale_x_log10() +
+  theme_minimal()
+
+graph3
+graph3a
+  
+```
+
+Graph 3 shows a graphs of mapping the number of participants against the average time of completion for countries. The relationship was further tested by including a trend line using geom_smooth(method="lm") and the corresponding coefficient plot. While there only seems to be a week relationship it does look like smaller participation numbers are related to lower average times. A possible explanation for this is that as travel becomes more complicated fewer people who take the marathon more seriously attend it. 
+
+## Discussion
+
+### What were the original charts you planned to create for this assignments? What steps were necessary for cleaning and preparing the data?
+
+I originally wanted to make a comparison based on age but as I was working on the sf graphs, nr of participation vs time seemed more interesting. For interactive graphs, I started with a graph that supported zooming in but decided to switch after seeing an example with a map of Germany.(https://albert-rapp.de/posts/ggplot2-tips/28_maps/28_maps.html) After some more research, I used html into the string formatting of the hover over and markdown tabs for switching what type of graph is being displayed. (heat map number of participants vs time)
+
+### What story could you tell with your plots? What difficulties did you encounter while creating the visualizations? What additional approaches do you think can be use to explore the data you selected?
+
+The story I explored was that the average time seems to increase with higher participation numbers. While displaying the data by states and country shows this trend, it does not explain why. Some further data like self reported training times could verify my possible explanation. Another possible refinement of this analysis would be to check how other given variables such as age influence the time. 
+
+A difficulty with the data set was that I was interested in data for countries and states while the data had individual entries for participants. This was solved by grouping the data by country or state and filtering. The grouped data was then combined with the map data. As encountered in the previous homework, the map data for world was missing an ISO_A3 value for France and Sweden. This was easily solved by filling that value with its ADM0_A3 value if ISO_A3 is not present.
+
+### How did you apply the principles of data visualizations and design for this assignment?
+
+Just like with the previous project, I mainly focused on small detail fitting the overall story and to not distract from what is important. 
+
+For example, the color choice. The same color palettes of graph 1 and 2 represent the same type of data but for different subsets of the data. A trade off needed to be made here as the scale was different between the set for the world data and the set of the state data. This was intentional as it better highlights the differences between the states. Additionally, the scale is based on a log10 scale also with the goal of better highlighting the differences.
+
+Another example, the interactive graphs. Interactive graphs can help with data visualization by providing more detail or switching the displayed values entirely. With a non interactive graph only so much information can be fit into a graph before it becomes cluttered and hard to read. Interactive graphs can show additional info for a small selected data points while remaining hidden while not selected. For graph 1 and 2 more info for a country or state such as the actual average time, name, and number of participants becomes visible by hovering over the graph. The type of data displayed can also be switched by switching of markdown tabs. These tabs show either a graph visualizing number of participants or the average time.
+
+Data annotation was used in graph 3 to show the names of the countries with high participation and the countries with low average times. 
+
+
+
+
+
