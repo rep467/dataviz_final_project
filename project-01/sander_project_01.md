@@ -55,11 +55,14 @@ Electric vehicles also have an MPG value (MPGe) which is calculated by using the
 
 **MPGe = EG * MPkwh**
 
-* EG = energy per galone of regular fuel in kwh (33.7kWh)
+* EG = energy per gallon of regular fuel in kwh (33.7kWh)
 * MPkwh = miles per kwh the car can drive (combined score of city and highway driving)
 
 
-However, the EG measurement of 33.7kWh assumes a perfect conversion of energy stored in a gallon of fuel to electricity. In other words, when comparing traditional gasoline cars to electric vehicles, it would be more appropriate to use an efficiency value from current petroleum powered power plants. (Ideally from once using the same type of petroleum fuel, but this ignored ignored based on the availability of data and because cars of different fuel grade are already being compared.) According to EIA (US Energy information Administration) petroleum based power plants produced 12.9kWh/gallon. ***[source]( https://www.eia.gov/tools/faqs/faq.php?id=667&t=3)*** (This might compare the efficiency of Electric vehicles more accurately to more traditional cars, but it completely ignores that electricity is also generated from other fossil fuel sources and renewable energy sources) Below is the same graph from above with the data adjusted accordingly.
+However, the EG measurement of 33.7kWh assumes a perfect conversion of energy stored in a gallon of fuel to electricity. In other words, when comparing traditional gasoline cars to electric vehicles, it would be more appropriate to use an efficiency value from current petroleum powered power plants. (Ideally from using the same type of petroleum fuel, but this is ignored based on the availability of data and because cars of different fuel grade are already being compared.) According to EIA (US Energy information Administration) petroleum based power plants produced 12.9kWh/gallon. ***[source]( https://www.eia.gov/tools/faqs/faq.php?id=667&t=3)*** (This might compare the efficiency of Electric vehicles more accurately to more traditional cars, but it completely ignores that electricity is also generated from other fossil fuel sources and renewable energy sources) Below is the same graph from above with the data adjusted accordingly.
+
+
+**The adjusted MPGe value is not a standard. It is a derived value I developed for better comparision to more traditional cars. This cannot affect overall trends observed as the majority of cars is powered by gasoline.** 
 
 
 ``` r
@@ -117,7 +120,7 @@ fuel_data_filtered_by_fuel_adjusted_mpge %>%
 
 ## Data Analysis
 
-The above graph shows that the overall MPG for cars of the four fuel types has not increased much and even decreased a little until 2008 were it then increased even over its initial decrease. Important to notice is that while the overall trend line appears relatively stable at first it did change around 2008 and started to increase. The graph below shows the top 10% percent of cars by mpg for each year. While the graph clearly shows that higher MPG were achieved it has the same trend as the graph with all data. 
+The above graph shows that the overall MPG for cars of the four fuel types has not increased much and even decreased a little until 2008 where it then increased even over its initial decrease. Important to notice is that while the overall trend line appears relatively stable at first it did change around 2008 and started to increase. The graph below shows the top 10% percent of cars by mpg for each year. While the graph clearly shows that higher MPG were achieved it has the same trend as the graph with all data. 
 
 
 
@@ -141,7 +144,7 @@ graph2a
 
 ![](sander_project_01_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
-The next point to explore was whether or not this trend is specific to a specific fuel type or if it is visible for all fuel types. The graph below shows the same data as before but separated by fuel type. Premium and Regular clearly have the same trend line while Diesel and Electric vehicles have a different trend line. For Electric vehicles the first vehicles are from 1998 with the trend line going up from 20 to around 40. Important to notice is also that there were some Electric vehicles around the year 2000 and then the production was stopped until 2007. For Diesel vehicles the trend line has lot of variation. The MPG trend line first goes down till 1994 then went up till 2003 to its highest point of 35mpg then went down until 2008 to then go up again. Its interesting to notice that at the end of the data the trend line is just at 30mpg which is 5 below its highest value of 35 mpg. Furthermore, the amount of new diesel vehicles has declined over the years which might explain why its trend line varies more and why it does not affect the overall trend line.
+The next point to explore was whether or not this trend is specific to a specific fuel type or if it is visible for all fuel types. The graph below shows the same data as before but separated by fuel type. Premium and Regular clearly have the same trend line while Diesel and Electric vehicles have a different trend line. For Electric vehicles the first vehicles are from 1998 with the trend line going up from 20 to around 40. Important to notice is also that there were some Electric vehicles around the year 2000 and then the production was stopped until 2007. For Diesel vehicles the trend line has a lot of variation. The MPG trend line first went down till 1994 then went up till 2003 to its highest point of 35mpg then went down until 2008 to then go up again. It's interesting to notice that at the end of the data the trend line is just at 30mpg which is 5 below its highest value of 35 mpg. Furthermore, the amount of new diesel vehicles has declined over the years which might explain why its trend line varies more and why it does not affect the overall trend line.
 
 
 ``` r
@@ -160,7 +163,7 @@ graph3
 ```
 
 ![](sander_project_01_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
-The graph below shows the overall amount of vehicles introduced by fuel type each year. This graph shows that most car models use either premium or regular fuel. While electric and diesel cars have very few models each year, electric car models have increased and diesel car models have decreased with years.The majority of car models initially used regular fuel but has decreased and is now about the same as premium fuel models. This shows that MPG trend is mostly set by premium and regular fuel type models as these are the most common car types.
+The graph below shows the overall amount of vehicles introduced by fuel type each year. This graph shows that most car models use either premium or regular fuel. While electric and diesel cars have very few models each year, electric car models have increased and diesel car models have decreased with years.The majority of car models initially used regular fuel but has decreased and is now about the same as premium fuel models. This shows that the MPG trend is mostly set by premium and regular fuel type models as these are the most common car types.
 
 
 ``` r
@@ -184,15 +187,15 @@ One consideration should be that this averages the mpg values are just based on 
 
 ### What were the original charts you planned to create for this assignments?
 
-When I saw the data originally I wanted to compare car size vs mpg over the years. However, that failed as the data includes a lot of data such as engine_displacement and engine_cylinders, and car class, but not car size. I also wanted to create something like a stacked bar chart but did decide against for data visualization reasons discussed in this class. 
+When I saw the data originally I wanted to compare car size vs mpg over the years. However, that failed as the data includes a lot of data such as engine_displacement and engine_cylinders, and car class, but not car size. I also wanted to create something like a stacked bar chart but decided against for data visualization reasons discussed in this class.
 
 ### What story could you tell with your plots?
 
-That the majority of cars (Premium and Regular fuel cars) have not improved much over the years in terms of mpg and even had a stable average for mpg for most years in the data. 
+The majority of cars (Premium and Regular fuel cars) have not improved much over the years in terms of mpg and even had a stable average for mpg for most years in the data.
 
 ### How did you apply the principles of data visualizations and design for this assignment?
 
-The first principle I used was to keep the data simple and show only what is important. For example there are lots different fuel types for cars, but I decided to use the non mixed most common once and to limit the amount of information each graph includes. The next point was to design graphs in such a way that legends can be kept to a minimum. This was achieved mainly by using a descriptive title which explains the data and then removing unnecessary legends and axis labels. Other method used involved using a facet_wrap to separate categories into their own graph and to label data on the graph directly. Another principle used was to make the graphs look nice and consistent. For consistency using the same colors for each category was important but already handled as the default colors by ggplot were set to the same group. For aesthetic reasons I used a line graph with 4 separate lines instead of a stacked bar chart to plot overall counts of car models by year. This did not only look nicer but was also easier to interpret. It also allowed to place labels on the graph itself instead of adding another legend. The last point to make it look nicer was to just focus on some small details that looked wrong such as the color of trend line or just having the title text at the right position.
+The first principle I used was to keep the data simple and show only what is important. For example there are lots of different fuel types for cars, but I decided to use the non mixed most common ones and to limit the amount of information each graph includes. The next point was to design graphs in such a way that legends can be kept to a minimum. This was achieved mainly by using a descriptive title which explains the data and then removing unnecessary legends and axis labels. Other methods used involved using a facet_wrap to separate categories into their own graph and to label data on the graph directly. Another principle used was to make the graphs look nice and consistent. For consistency using the same colors for each category was important but already handled as the default colors by ggplot were set to the same group. For aesthetic reasons I used a line graph with 4 separate lines instead of a stacked bar chart to plot overall counts of car models by year. This did not only look nicer but was also easier to interpret. It also allowed me to place labels on the graph itself instead of adding another legend. The last point to make it look nicer was to just focus on some small details that looked wrong such as the color of the trend line or just having the title text at the right position.
 
 
 
