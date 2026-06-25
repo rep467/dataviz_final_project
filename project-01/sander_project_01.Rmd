@@ -8,7 +8,25 @@ output:
     toc_float: true
 ---
 
+## Legend
+[Data Loading, initial filtering, and Graph 1](#data-loading-and-graph1)
 
+[Graph 2](#graph-2)
+
+[Graph 2 reworked](#graph-2-reworked)
+
+[Data Summary](#data-summary)
+
+[Graph 3 top performing cars by mpg](#graph-3-top-performing-cars-by-mpg)
+
+[Graph 4 trend for specific fuel types](#graph-4-trend-for-specific-fuel-types)
+
+[Graph 5 Amount of cars by fuel type](#amount-of-cars-by-fuel-type)
+
+[Discussion](#discussion)
+
+
+## Data Loading and Graph 1
 ```{r}
 library(tidyverse)
 
@@ -17,19 +35,19 @@ fuel_data = read.csv(fuel_csv)
 ```
 
 ```{r}
-# Filter for fuel type Regular, Premium, Electricity, Diesel, 
+# Filter for fuel type Regular, Premium, Electricity, Diesel,
 fuel_data_filtered_by_fuel <- fuel_data %>% filter(fuel_type %in% c("Regular", "Diesel", "Premium", "Electricity"))
 
 
-graph1 <- ggplot(data=fuel_data_filtered_by_fuel, aes(x=year, y=combined_mpg_ft1))
-graph1 <- graph1 + geom_point(alpha = 0.4)
-graph1 <- graph1 + labs(x=NULL, y="MPG / MPGe" , title = "MPG of new cars by year")
-graph1 <- graph1 + theme(plot.title.position = "plot")
+graph1 <- ggplot(data = fuel_data_filtered_by_fuel, aes(x = year, y = combined_mpg_ft1)) +
+  geom_jitter(height = 0, alpha = 0.1) +
+  labs(x = NULL, y = "MPG / MPGe" , title = "MPG of new cars by year") +
+  theme(plot.title.position = "plot")
 graph1
 ```
 
 ## Initial Data filtering 
-This project focuses on cars with one of these four fuel types: "Regular", "Diesel", "Premium", and "Electricity". Hybrids were also dropped from the data as the hybrid category was not well defined in the dataset (Hybrid cars were defined as Regular gas and Electricity or regular gas or electricity, with 4 categories for electric hybrid cars and 2 for gas petroleum hybrid cars). 
+This project focuses on cars with one of these four fuel types: "Regular", "Diesel", "Premium", and "Electricity". Hybrids were also dropped from the data as the hybrid category was not well defined in the data set (Hybrid cars were defined as Regular gas and Electricity or regular gas or electricity, with 4 categories for electric hybrid cars and 2 for gas petroleum hybrid cars). 
 
 
 Electric vehicles also have an MPG value (MPGe) which is calculated by using the following formula:
@@ -43,52 +61,73 @@ Electric vehicles also have an MPG value (MPGe) which is calculated by using the
 However, the EG measurement of 33.7kWh assumes a perfect conversion of energy stored in a gallon of fuel to electricity. In other words, when comparing traditional gasoline cars to electric vehicles, it would be more appropriate to use an efficiency value from current petroleum powered power plants. (Ideally from using the same type of petroleum fuel, but this is ignored based on the availability of data and because cars of different fuel grade are already being compared.) According to EIA (US Energy information Administration) petroleum based power plants produced 12.9kWh/gallon. ***[source]( https://www.eia.gov/tools/faqs/faq.php?id=667&t=3)*** (This might compare the efficiency of Electric vehicles more accurately to more traditional cars, but it completely ignores that electricity is also generated from other fossil fuel sources and renewable energy sources) Below is the same graph from above with the data adjusted accordingly.
 
 
-**The adjusted MPGe value is not a standard. It is a derived value I developed for better comparision to more traditional cars. This cannot affect overall trends observed as the majority of cars is powered by gasoline.** 
+**The adjusted MPGe value is not a standard. It is a derived value I developed for better comparison to more traditional cars. This does not affect overall trends observed as the majority of cars is powered by gasoline** 
 
+## Graph 2
 ```{r}
 #Adjusted MPGe value ratio
 ratio <- 12.9 / 33.7
 
-fuel_data_filtered_by_fuel_adjusted_mpge <- fuel_data_filtered_by_fuel %>% mutate(combined_mpg_ft1 = if_else(fuel_type == "Electricity", combined_mpg_ft1 * ratio, combined_mpg_ft1))
+fuel_data_filtered_by_fuel_adjusted_mpge <- fuel_data_filtered_by_fuel %>% mutate(
+  combined_mpg_ft1 = if_else(
+    fuel_type == "Electricity",
+    combined_mpg_ft1 * ratio,
+    combined_mpg_ft1
+  )
+)
 
-graph2 <- ggplot(data=fuel_data_filtered_by_fuel_adjusted_mpge, aes(x=year, y=combined_mpg_ft1))
-graph2 <- graph2 + geom_point(color = "blue",alpha = 0.3)
-graph2 <- graph2 + labs(x=NULL, y="MPG / MPGe adjusted", title = "MPG of new cars by year")
-graph2 <- graph2 + geom_smooth(method="gam", color="black")
+graph2 <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge, aes(x =
+                                                                        year, y = combined_mpg_ft1))
+graph2 <- graph2 + geom_point(color = "blue", alpha = 0.3)
+graph2 <- graph2 + labs(x = NULL, y = "MPG / MPGe adjusted", title = "MPG of new cars by year")
+graph2 <- graph2 + geom_smooth(method = "gam", color = "black")
 graph2 <- graph2 + theme(plot.title.position = "plot")
 
 graph2
 
 ```
+## Graph 2 reworked
 ```{r}
 library(ggiraph)
 library(glue)
 
 
 placeholder_if_NA <- function(value, fuel_type_value) {
-  if_else(is.na(value), glue('{fuel_type_value}</br>Average: NA </br>Total: 0'), value)
+  if_else(is.na(value),
+          glue('{fuel_type_value}</br>Average: NA </br>Total: 0'),
+          value)
 }
 
-fuel_data_filtered_by_fuel_adjusted_mpge_stat_text<-fuel_data_filtered_by_fuel_adjusted_mpge %>%
+fuel_data_filtered_by_fuel_adjusted_mpge_stat_text <-
+  fuel_data_filtered_by_fuel_adjusted_mpge %>%
   group_by(year, fuel_type) %>%
   mutate(
     avg_year_fuel = round(mean(combined_mpg_ft1), 2),
     total_year_fuel = n(),
-    my_tooltip_fuel = glue('{fuel_type}</br>Average:{avg_year_fuel}</br>Total:{total_year_fuel}')
+    my_tooltip_fuel =
+      glue(
+        '{fuel_type}</br>Average:{avg_year_fuel}</br>Total:{total_year_fuel}'
+      )
   ) %>%
   ungroup() %>%
   group_by(year) %>%
   mutate(
     avg_year = round(mean(combined_mpg_ft1), 2),
     total_year = n(),
-    my_tooltip = glue('{year}</br>Average:{avg_year}</br>Total:{total_year}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Regular"][1], "Regular")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Premium"][1], "Premium")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Diesel"][1], "Diesel")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Electricity"][1], "Electricity")}'),
+    my_tooltip = glue(
+      '{year}</br>Average:{avg_year}</br>Total:{total_year}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Regular"][1], "Regular")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Premium"][1], "Premium")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Diesel"][1], "Diesel")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Electricity"][1], "Electricity")}'
+    ),
   ) %>%
   ungroup()
-  
 
-graph2_reworked <- ggplot(data=fuel_data_filtered_by_fuel_adjusted_mpge_stat_text, aes(x=year, y=combined_mpg_ft1,group=year,)) +
-  geom_boxplot_interactive(color="blue", aes(data_id = year, tooltip = if_else(is.na(my_tooltip), "", my_tooltip))) +
-  labs(x=NULL, y="MPG / MPGe adjusted", title = "MPG of new cars by year")
+
+graph2_reworked <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge_stat_text, aes(x =
+                                                                                           year, y = combined_mpg_ft1, group = year, )) +
+  geom_boxplot_interactive(color = "blue", aes(
+    data_id = year,
+    tooltip = if_else(is.na(my_tooltip), "", my_tooltip)
+  )) +
+  labs(x = NULL, y = "MPG / MPGe adjusted", title = "MPG of new cars by year")
 
 
 girafe(ggobj = graph2_reworked)
@@ -97,7 +136,8 @@ girafe(ggobj = graph2_reworked)
 ## Data summary
 
 ```{r}
-sapply(fuel_data_filtered_by_fuel_adjusted_mpge["combined_mpg_ft1"], function(x) c(Mean = mean(x), stdDev=sd(x)))
+sapply(fuel_data_filtered_by_fuel_adjusted_mpge["combined_mpg_ft1"], function(x)
+  c(Mean = mean(x), stdDev = sd(x)))
 
 fuel_data_filtered_by_fuel_adjusted_mpge %>%
   group_by(fuel_type) %>%
@@ -113,6 +153,7 @@ fuel_data_filtered_by_fuel_adjusted_mpge %>%
 
 The above graph shows that the overall MPG for cars of the four fuel types has not increased much and even decreased a little until 2008 where it then increased even over its initial decrease. The average mpg started at 19.12mpg in 1988 and stayed around that value until 2008 where it was 19.39mpg. From 2009 to 2017 it increased to 23.7mpg. Important to notice is that while the overall trend line appears relatively stable at first it did change around 2008 and started to increase. The graph below shows the top 10% percent of cars by mpg for each year. While the graph clearly shows that higher MPG were achieved it has the same trend as the graph with all data. 
 
+## Graph 3 top performing cars by mpg
 
 ```{r}
 
@@ -121,43 +162,73 @@ fuel_data_filtered_by_fuel_adjusted_mpge_top10 <- fuel_data_filtered_by_fuel_adj
   filter(combined_mpg_ft1 >= quantile(combined_mpg_ft1, 0.9))
 
 
-graph2a <- ggplot(data=fuel_data_filtered_by_fuel_adjusted_mpge_top10, aes(x=year, y=combined_mpg_ft1))
-graph2a <- graph2a + geom_jitter(height = 0 , color = "blue",alpha = 0.25)
-graph2a <- graph2a + labs(x=NULL, y="MPG / MPGe adjusted", title = "MPG of new cars by year top 10% percent")
-graph2a <- graph2a + geom_smooth(method="gam", color="black")
-graph2a <- graph2a + theme(plot.title.position = "plot")
+graph2a <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge_top10, aes(x =
+                                                                               year, y = combined_mpg_ft1)) +
+  geom_jitter(height = 0 ,
+              color = "blue",
+              alpha = 0.25) +
+  labs(x = NULL, y = "MPG / MPGe adjusted", title = "MPG of new cars by year top 10% percent") +
+  geom_smooth(method = "gam", color = "black") +
+  theme(plot.title.position = "plot")
 graph2a
 ```
 
 The next point to explore was whether or not this trend is specific to a specific fuel type or if it is visible for all fuel types. The graph below shows the same data as before but separated by fuel type. Premium and Regular clearly have the same trend line while Diesel and Electric vehicles have a different trend line. For Electric vehicles the first vehicles are from 1998 with the trend line going up from 20 to around 40. Important to notice is also that there were some Electric vehicles around the year 2000 and then the production was stopped until 2007. For Diesel vehicles the trend line has a lot of variation. The MPG trend line first went down till 1994 then went up till 2003 to its highest point of 35mpg then went down until 2008 to then go up again. It's interesting to notice that at the end of the data the trend line is just at 30mpg which is 5 below its highest value of 35 mpg. Furthermore, the amount of new diesel vehicles has declined over the years which might explain why its trend line varies more and why it does not affect the overall trend line.
 
+## Graph 4 trend for specific fuel types
+
 ```{r}
-graph3 <- ggplot(data=fuel_data_filtered_by_fuel_adjusted_mpge, aes(x=year, y=combined_mpg_ft1, color=fuel_type)) + 
-  geom_jitter(height=0, aes(alpha=if_else(fuel_type == "Electricity", 0.4, 0.1))) +
+graph3 <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge, aes(x =
+                                                                        year, y = combined_mpg_ft1, color = fuel_type)) +
+  geom_jitter(height = 0, aes(alpha = if_else(fuel_type == "Electricity", 0.4, 0.1))) +
   scale_alpha_continuous(limits = c(0, 1)) +
-  labs(x=NULL, y="MPG / MPGe adjusted", title = "MPG of new cars by year", color="Fuel type", alpha=NULL) +
+  labs(
+    x = NULL,
+    y = "MPG / MPGe adjusted",
+    title = "MPG of new cars by year",
+    color = "Fuel type",
+    alpha = NULL
+  ) +
   guides(alpha = "none") +
-  geom_smooth(method="gam", se = TRUE, color = "#444444") +
+  geom_smooth(method = "gam",
+              se = TRUE,
+              color = "#444444") +
   facet_wrap(vars(fuel_type)) +
-  guides(color="none") + 
+  guides(color = "none") +
   theme(plot.title.position = "plot")
 graph3
 ```
 The graph below shows the overall amount of vehicles introduced by fuel type each year. This graph shows that most car models use either premium or regular fuel. While electric and diesel cars have very few models each year, electric car models have increased and diesel car models have decreased with years.The majority of car models initially used regular fuel but has decreased and is now about the same as premium fuel models. This shows that the MPG trend is mostly set by premium and regular fuel type models as these are the most common car types.
 
+## Graph 5 Amount of cars by fuel type
+
 ```{r}
-graph4 <- ggplot(data=fuel_data_filtered_by_fuel_adjusted_mpge, aes(x=year))
-graph4 <- graph4 + geom_line(stat="count", aes(color=fuel_type))
-graph4 <- graph4 + labs(title = "Count of car models by year and fuel type", x=NULL, y=NULL)
-graph4 <- graph4 + geom_text(aes(label = fuel_type, color = fuel_type), fontface = "bold", vjust = -0.6, stat="count", data = filter(fuel_data_filtered_by_fuel_adjusted_mpge, year == min(year) | (year == 1985 & fuel_type == "Premium") | (year == 1998 & fuel_type == "Electricity")))
-graph4 <- graph4 + guides(color="none")
-graph4 <- graph4 + theme(plot.title.position = "plot")
+graph4 <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge, aes(x =
+                                                                        year)) +
+  geom_line(stat = "count", aes(color = fuel_type)) +
+  labs(title = "Count of car models by year and fuel type", x = NULL, y =
+         NULL) +
+  geom_text(
+    aes(label = fuel_type, color = fuel_type),
+    fontface = "bold",
+    vjust = -0.6,
+    stat = "count",
+    data = filter(
+      fuel_data_filtered_by_fuel_adjusted_mpge,
+      year == min(year) |
+        (year == 1985 &
+           fuel_type == "Premium") |
+        (year == 1998 & fuel_type == "Electricity")
+    )
+  ) +
+  guides(color = "none") +
+  theme(plot.title.position = "plot")
 graph4
 ```
 
-The key takeaways: MPG has not increased between 1984 and to around 2010 for car models using premium or regular fuel type. At the same time, car models with better fuel economy reaching higher MPG were produced. Around 2010 average mpg for new models started to increase slightly. While electric vehicles are more efficient, comparing the MPGe value to MPG is misleading and should not be done without the introduction of a more realistic conversion of gallons to kWh.
+The key takeaways: MPG has not increased between 1984 to 2008 for car models using premium or regular fuel type. At the same time, car models with better fuel economy reaching higher MPG were produced. Around 2008 average mpg for new models started to increase slightly. While electric vehicles are more efficient, comparing the MPGe value to MPG is misleading and should not be done without the introduction of a more realistic conversion of gallons to kWh in my opinion (my own custom adjusted MPGe assumed an efficiency of gasoline to kWh conversion of 12.9kWh per gallon).
 
-One consideration should be that this averages the mpg values are just based on models, there is no weight applied to the actual amount of cars sold or produced. It would be interesting to add that data to check how much buyers cared about the efficiency.
+One consideration should be that this averages the mpg values are just based on amount of models produced, there is no weight applied to the actual amount of cars sold or produced. It would be interesting to add that data to check how much buyers cared about the efficiency.
 
 
 ## Disscussion
