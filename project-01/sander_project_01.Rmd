@@ -62,11 +62,36 @@ graph2
 ```
 ```{r}
 library(ggiraph)
+library(glue)
 
-graph2_reworked <- ggplot(data=fuel_data_filtered_by_fuel_adjusted_mpge, aes(x=year, y=combined_mpg_ft1,group=year,)) +
-  geom_boxplot_interactive()
 
-graph2_reworked
+placeholder_if_NA <- function(value, fuel_type_value) {
+  if_else(is.na(value), glue('{fuel_type_value}</br>Average: NA </br>Total: 0'), value)
+}
+
+fuel_data_filtered_by_fuel_adjusted_mpge_stat_text<-fuel_data_filtered_by_fuel_adjusted_mpge %>%
+  group_by(year, fuel_type) %>%
+  mutate(
+    avg_year_fuel = round(mean(combined_mpg_ft1), 2),
+    total_year_fuel = n(),
+    my_tooltip_fuel = glue('{fuel_type}</br>Average:{avg_year_fuel}</br>Total:{total_year_fuel}')
+  ) %>%
+  ungroup() %>%
+  group_by(year) %>%
+  mutate(
+    avg_year = round(mean(combined_mpg_ft1), 2),
+    total_year = n(),
+    my_tooltip = glue('{year}</br>Average:{avg_year}</br>Total:{total_year}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Regular"][1], "Regular")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Premium"][1], "Premium")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Diesel"][1], "Diesel")}</br></br>{placeholder_if_NA(my_tooltip_fuel[fuel_type == "Electricity"][1], "Electricity")}'),
+  ) %>%
+  ungroup()
+  
+
+graph2_reworked <- ggplot(data=fuel_data_filtered_by_fuel_adjusted_mpge_stat_text, aes(x=year, y=combined_mpg_ft1,group=year,)) +
+  geom_boxplot_interactive(color="blue", aes(data_id = year, tooltip = if_else(is.na(my_tooltip), "", my_tooltip))) +
+  labs(x=NULL, y="MPG / MPGe adjusted", title = "MPG of new cars by year")
+
+
+girafe(ggobj = graph2_reworked)
 ```
 
 ## Data summary
@@ -86,7 +111,7 @@ fuel_data_filtered_by_fuel_adjusted_mpge %>%
 
 ## Data Analysis
 
-The above graph shows that the overall MPG for cars of the four fuel types has not increased much and even decreased a little until 2008 where it then increased even over its initial decrease. Important to notice is that while the overall trend line appears relatively stable at first it did change around 2008 and started to increase. The graph below shows the top 10% percent of cars by mpg for each year. While the graph clearly shows that higher MPG were achieved it has the same trend as the graph with all data. 
+The above graph shows that the overall MPG for cars of the four fuel types has not increased much and even decreased a little until 2008 where it then increased even over its initial decrease. The average mpg started at 19.12mpg in 1988 and stayed around that value until 2008 where it was 19.39mpg. From 2009 to 2017 it increased to 23.7mpg. Important to notice is that while the overall trend line appears relatively stable at first it did change around 2008 and started to increase. The graph below shows the top 10% percent of cars by mpg for each year. While the graph clearly shows that higher MPG were achieved it has the same trend as the graph with all data. 
 
 
 ```{r}
