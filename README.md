@@ -13,7 +13,7 @@ At the same time, car models with better fuel economy reaching higher MPG were p
 
 **Sample data visualization: (check html file for an interactive version)**
 
-*[Boxplot of mpg of cars by year]* <img src="https://raw.githubusercontent.com/rep467/dataviz_final_project/main/figures/dataviz_final_project/figures/project-1-graph4-non-interactive.png" width="70%" height="70%"/>
+*[Boxplot of mpg of cars by year]* <img src="figures/project-1-graph4-non-interactive.png" width="70%" height="70%"/>
 
 ## Project 02
 
