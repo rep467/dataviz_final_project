@@ -200,6 +200,7 @@ graph3 <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge, aes(x =
   theme(plot.title.position = "plot")
 graph3
 ```
+
 The graph below shows the overall amount of vehicles introduced by fuel type each year. This graph shows that most car models use either premium or regular fuel. While electric and diesel cars have very few models each year, electric car models have increased and diesel car models have decreased with years.The majority of car models initially used regular fuel but has decreased and is now about the same as premium fuel models. This shows that the MPG trend is mostly set by premium and regular fuel type models as these are the most common car types.
 
 ## Graph 5 Amount of cars by fuel type
