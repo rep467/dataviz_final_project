@@ -16,13 +16,19 @@ In the `project_01/` folder you can find a project about car fuel data. In this 
 
 ## Project 02
 
-In this project, I explored ... *[short description of your revised project goes here]* Find the code and report in the `project_02/` folder.
+In this project, I explored data from the Boston marathon 2017. 
+The goal of the project was to explore interactive graphs and spatial visualization. 
+The library ggigraph with geom_sf was used for the graphs. 
+The data included data such as age country of origin and various times. 
 
-**Sample data visualization:**
+Find the code and report in the `project_02/` folder.
 
-*[include your favorite visualization from this project here]* <img src="https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/fl_higher_ed.png" width="80%" height="80%"/>
+**Sample data visualization: (check html file for an interactive version)**
 
-(you can place your figures in the `figures/` folder and use the `![](path_to_picture)` option to add the pictures here)
+*[Graph of country of origin from participants]*
+
+<img src="figures/project-2-graph1-non-interactive-countries.png" width="80%" height="80%"/>
+
 
 ## Project 03
 
