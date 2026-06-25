@@ -34,7 +34,7 @@ fuel_csv = "../data/fuel.csv"
 fuel_data = read.csv(fuel_csv)
 ```
 
-```{r}
+```{r, fig.alt="This graph is scatterplot graph with each point being a car for the year x and the mpg y. Most data points seem to be below 25mpg with a small cluster after 2010 being at arround 100mpg"}
 # Filter for fuel type Regular, Premium, Electricity, Diesel,
 fuel_data_filtered_by_fuel <- fuel_data %>% filter(fuel_type %in% c("Regular", "Diesel", "Premium", "Electricity"))
 
@@ -64,7 +64,7 @@ However, the EG measurement of 33.7kWh assumes a perfect conversion of energy st
 **The adjusted MPGe value is not a standard. It is a derived value I developed for better comparison to more traditional cars. This does not affect overall trends observed as the majority of cars is powered by gasoline** 
 
 ## Graph 2
-```{r}
+```{r, fig.alt="This graph is scatterplot graph with each point being a car for the year x and the mpg y. This scatterplot shows that the average remained around 19 mpg until 2008. From 2009 it started to increase reaching 23.7 in 2017."}
 #Adjusted MPGe value ratio
 ratio <- 12.9 / 33.7
 
@@ -89,9 +89,11 @@ graph2
 
 ## Graph 2 reworked
 
-```{r}
+```{r, fig.alt="This graph is an interactive Boxplot graph with one boxplot for each year showing the mpg of all cars. This Boxplot shows that the average remained around 19 mpg until 2008. From 2009 it started to increase reaching 23.7 in 2017. Even in 1984 outliers with mpg above 30 existed."}
+
 library(ggiraph)
 library(glue)
+library(htmltools)
 
 
 placeholder_if_NA <- function(value, fuel_type_value) {
@@ -129,10 +131,20 @@ graph2_reworked <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge_stat_t
     data_id = year,
     tooltip = if_else(is.na(my_tooltip), "", my_tooltip)
   )) +
-  labs(x = NULL, y = "MPG / MPGe adjusted", title = "MPG of new cars by year")
+  labs(x = NULL, y = "MPG / MPGe adjusted", title = "MPG of new cars by year", alt = "TEST467")
 
 
-girafe(ggobj = graph2_reworked)
+interactive_graph<-girafe(ggobj = graph2_reworked)
+
+# ggigraph did not use fig.alt text set above, this is workaround.
+browsable(
+  tags$div(
+    `aria-label` = "This graph is an interactive Boxplot graph with one boxplot for each year showing the mpg of all cars. This Boxplot shows that the average remained around 19 mpg until 2008. From 2009 it started to increase reaching 23.7 in 2017. Even in 1984 outliers with mpg above 30 existed.",
+    role = "img",
+    interactive_graph
+  )
+)
+
 ```
 
 ## Data summary
@@ -157,7 +169,7 @@ The above graph shows that the overall MPG for cars of the four fuel types has n
 
 ## Graph 3 top performing cars by mpg
 
-```{r}
+```{r, fig.alt="This graph consists of a scatterplot of the top 10% of cars by MPG. The trend  line starts at 30mpg in 1984 decreases a little bit until 2006 to then increase to about 35mpg by 2017."}
 
 fuel_data_filtered_by_fuel_adjusted_mpge_top10 <- fuel_data_filtered_by_fuel_adjusted_mpge %>%
   group_by(year) %>%
@@ -179,10 +191,11 @@ The next point to explore was whether or not this trend is specific to a specifi
 
 ## Graph 4 trend for specific fuel types
 
-```{r}
+```{r, fig.alt="Graph consisting of for scatterplots with each showing the MPG trend for a fuel type. Premium and regular start at about 20 mpg remain stable until 2008 and then increase to 24.95 for regular and 21.69 for Premium by 2017. Diesel starts at 24.82 then decreases to 16.61 in 1994 then increases to 35.62 by 2002 to then decrease to 20.57 by 2008 to then increase to 21.69 by 2017. Electric cars start at 16.72 MPGe (adjusted) in 1998 and increase to 39.93 by 2017."}
 graph3 <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge, aes(x =
                                                                         year, y = combined_mpg_ft1, color = fuel_type)) +
   geom_jitter(height = 0, aes(alpha = if_else(fuel_type == "Electricity", 0.4, 0.1))) +
+  scale_colour_viridis_d(option="H") +
   scale_alpha_continuous(limits = c(0, 1)) +
   labs(
     x = NULL,
@@ -205,9 +218,10 @@ The graph below shows the overall amount of vehicles introduced by fuel type eac
 
 ## Graph 5 Amount of cars by fuel type
 
-```{r}
+```{r, fig.alt="A line chart displaying the amount of cars by each fuel type for each year. Most cars are Regular starting at 1702 in 1984 but decreased to 559 by 2017. Premium cars started at 101 in 1985 and increased to 541 by 2017. Diesel starts at 262 in 1984 decreses sharply ending at 15 in 2017"}
 graph4 <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge, aes(x =
                                                                         year)) +
+  scale_colour_viridis_d(option="H") +
   geom_line(stat = "count", aes(color = fuel_type)) +
   labs(title = "Count of car models by year and fuel type", x = NULL, y =
          NULL) +
@@ -219,7 +233,7 @@ graph4 <- ggplot(data = fuel_data_filtered_by_fuel_adjusted_mpge, aes(x =
     data = filter(
       fuel_data_filtered_by_fuel_adjusted_mpge,
       year == min(year) |
-        (year == 1985 &
+        (year == 1993 &
            fuel_type == "Premium") |
         (year == 1998 & fuel_type == "Electricity")
     )
