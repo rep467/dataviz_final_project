@@ -34,6 +34,28 @@ Using the 2022 data:
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_facet.png")
 ```
 
+```{r}
+months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
+            "7"="July", "8"="August", "9"="September", "10"="October", "11"="November", "12"="December")
+
+int_to_month_str <- function(int_value) {
+  months[int_value]
+}
+
+graph1a <- ggplot(data=weather_tpa, aes(x=max_temp, fill=month)) +
+  scale_x_continuous(breaks=c(60, 70, 80, 90)) +
+  scale_y_continuous(breaks=c(0, 5, 10, 15, 20), limits=c(0,20)) +
+  scale_fill_viridis_c() +
+  geom_histogram(binwidth = 3) +
+  theme_bw() +
+  theme(legend.position = "none") +
+  facet_wrap(vars(month), labeller = as_labeller(months)) +
+  labs(x="Maximum temperatures", y="Number of Days", fill=NULL)
+
+graph1a
+
+```
+
 Hint: the option `binwidth = 3` was used with the `geom_histogram()` function.
 
 (b) Create a plot like the one below:
@@ -44,6 +66,18 @@ knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_f
 
 Hint: check the `kernel` parameter of the `geom_density()` function, and use `bw = 0.5`.
 
+```{r}
+
+
+graph1b <- ggplot(data=weather_tpa, aes(x=max_temp)) +
+  geom_density(bw=0.5, fill="#7f7f7f") +
+  theme_minimal() +
+  labs(x="Maximum temperature", y="density")
+  
+
+graph1b
+```
+
 (c) Create a plot like the one below:
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
@@ -51,6 +85,25 @@ knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_f
 ```
 
 Hint: default options for `geom_density()` were used. 
+
+```{r}
+months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
+            "7"="July", "8"="August", "9"="September", "10"="October", "11"="November", "12"="December")
+
+
+graph1b <- ggplot(data=weather_tpa, aes(x=max_temp, fill=month)) +
+  scale_x_continuous(breaks=c(60, 70, 80, 90)) +
+  scale_y_continuous(breaks=c(0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.3, 0.35, 0.4)) +
+  scale_fill_viridis_c() +
+  geom_density() +
+  facet_wrap(vars(month), labeller = as_labeller(months)) +
+  theme_bw() +
+  theme(legend.position = "none") +
+  labs(x="Maximum temperature", y=NULL, fill=NULL)
+  
+
+graph1b
+```
 
 (d) Generate a plot like the chart below:
 
