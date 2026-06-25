@@ -21,7 +21,7 @@ output:
 
 [Graph 4 trend for specific fuel types](#graph-4-trend-for-specific-fuel-types)
 
-[Graph 5 Amount of cars by fuel type](#amount-of-cars-by-fuel-type)
+[Graph 5 Amount of cars by fuel type](#graph-5-amount-of-cars-by-fuel-type)
 
 [Discussion](#discussion)
 
@@ -86,7 +86,9 @@ graph2 <- graph2 + theme(plot.title.position = "plot")
 graph2
 
 ```
+
 ## Graph 2 reworked
+
 ```{r}
 library(ggiraph)
 library(glue)
@@ -231,7 +233,7 @@ The key takeaways: MPG has not increased between 1984 to 2008 for car models usi
 One consideration should be that this averages the mpg values are just based on amount of models produced, there is no weight applied to the actual amount of cars sold or produced. It would be interesting to add that data to check how much buyers cared about the efficiency.
 
 
-## Disscussion
+## Discussion
 
 ### What were the original charts you planned to create for this assignments?
 
