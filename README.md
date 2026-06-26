@@ -4,6 +4,21 @@
 
 The following are the 3 projects created for the data visualization class
 
+The files for the projects can be found in: (code and reports)
+
+* /project-01/
+* /project-02/
+* /project-03/
+
+The data files for all projects can be found in:
+
+* /data/
+
+The figures of all projects are not just in the report but also in:
+
+* /figures/
+
+
 ## Project 01
 
 In the `project_01/` folder you can find a project about car fuel data. In this project fuel data which contains new cars by year is analyzed with a focus on mpg values. The purpose of this project is to gain experience using ggplot while following principles learned in CAP5735 Data Visualization and Reproducible Research. The key takeaways: MPG has not increased between 1984 and to around 2010 for car models using premium or regular fuel type. At the same time, car models with better fuel economy reaching higher MPG were produced. Around 2010 average mpg for new models started to increase.
