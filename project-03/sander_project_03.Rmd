@@ -34,7 +34,7 @@ Using the 2022 data:
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_facet.png")
 ```
 
-```{r}
+```{r, fig.alt="A histogram showing the maximum temperatures in each month and there frequency by nr of days."}
 months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
             "7"="July", "8"="August", "9"="September", "10"="October", "11"="November", "12"="December")
 
@@ -43,7 +43,7 @@ int_to_month_str <- function(int_value) {
 }
 
 graph1a <- ggplot(data=weather_tpa, aes(x=max_temp, fill=month)) +
-  scale_x_continuous(breaks=c(60, 70, 80, 90)) +
+  scale_x_continuous(breaks=c(50, 60, 70, 80, 90)) +
   scale_y_continuous(breaks=c(0, 5, 10, 15, 20), limits=c(0,20)) +
   scale_fill_viridis_c() +
   geom_histogram(binwidth = 3) +
@@ -66,7 +66,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_f
 
 Hint: check the `kernel` parameter of the `geom_density()` function, and use `bw = 0.5`.
 
-```{r}
+```{r, fig.alt="A graph showing the probability density for maximum temperature for the entire year."}
 
 
 graph1b <- ggplot(data=weather_tpa, aes(x=max_temp)) +
@@ -86,7 +86,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_f
 
 Hint: default options for `geom_density()` were used. 
 
-```{r}
+```{r fig.alt="Graphs showing the probability density for maximum temperature for each month."}
 months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
             "7"="July", "8"="August", "9"="September", "10"="October", "11"="November", "12"="December")
 
@@ -107,16 +107,13 @@ graph1b
 
 (d) Generate a plot like the chart below:
 
-
-
-
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_ridges_plasma.png")
 ```
 
 Hint: use the`{ggridges}` package, and the `geom_density_ridges()` function paying close attention to the `quantile_lines` and `quantiles` parameters. The plot above uses the `plasma` option (color scale) for the _viridis_ palette.
 
-```{r}
+```{r, fig.alt="A graph showing the probability density for maximum temperature for each month with a marked median."}
 library(ggridges)
 
 months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
@@ -137,7 +134,8 @@ graph1c
 (e) Create a plot of your choice that uses the attribute for precipitation _(values of -99.9 for temperature or -99.99 for precipitation represent missing data)_.
 
 ### bad graph example
-```{r}
+This graph was created as an example 
+```{r, fig.alt="A bar graph showing precipitaition per month."}
 graph1e <- ggplot(data=weather_tpa, aes(x=month, y=precipitation)) +
   geom_col()
 
@@ -149,88 +147,130 @@ graph1e
 ```{r}
 graph1e <- ggplot(data=weather_tpa, fill="blue", aes(x=as.factor(month), y=precipitation)) +
   geom_col(fill="blue")+
-  labs(x=NULL, y="precipitaition in inch", title = "Precipitaition Tampa International Airport 2022")+
+  labs(x=NULL, y="Precipitaition (inch)", title = "Precipitaition Tampa International Airport 2022")+
   scale_x_discrete(labels = months)+
-  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = 1))
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)), sec.axis = sec_axis(~ . * 25.4, name = "Precipitaition (mm)")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = 1), axis.title.y.right = element_text(angle = 90), plot.title.position = "plot")
 
 graph1e
 ```
 
 ## PART 2 
 
-> **You can choose to work on either Option (A) or Option (B)**. Remove from this template the option you decided not to work on. 
-
-
 ### Option (A): Visualizing Text Data
 
-Review the set of slides (and additional resources linked in it) for visualizing text data: Week 6 PowerPoint slides of Visualizing Text Data. 
-
-Choose any dataset with text data, and create at least one visualization with it. For example, you can create a frequency count of most used bigrams, a sentiment analysis of the text data, a network visualization of terms commonly used together, and/or a visualization of a topic modeling approach to the problem of identifying words/documents associated to different topics in the text data you decide to use. 
-
-Make sure to include a copy of the dataset in the `data/` folder, and reference your sources if different from the ones listed below:
-
+### Dataset used for this part:
 - [Billboard Top 100 Lyrics](https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/data/BB_top100_2015.csv)
 
-- [RateMyProfessors comments](https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/data/rmp_wit_comments.csv)
-
-- [FL Poly News Articles](https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/data/flpoly_news_SP23.csv)
-
-
-(to get the "raw" data from any of the links listed above, simply click on the `raw` button of the GitHub page and copy the URL to be able to read it in your computer using the `read_csv()` function)
-
-
-### Option (B): Data on Concrete Strength 
-
-Concrete is the most important material in **civil engineering**. The concrete compressive strength is a highly nonlinear function of _age_ and _ingredients_. The dataset used here is from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/index.php), and it contains 1030 observations with 9 different attributes 9 (8 quantitative input variables, and 1 quantitative output variable). A data dictionary is included below: 
-
-
-Variable                      |    Notes                
-------------------------------|-------------------------------------------
-Cement                        | kg in a $m^3$ mixture             
-Blast Furnace Slag            | kg in a $m^3$ mixture  
-Fly Ash                       | kg in a $m^3$ mixture             
-Water                         | kg in a $m^3$ mixture              
-Superplasticizer              | kg in a $m^3$ mixture
-Coarse Aggregate              | kg in a $m^3$ mixture
-Fine Aggregate                | kg in a $m^3$ mixture      
-Age                           | in days                                             
-Concrete compressive strength | MPa, megapascals
-
-
-Below we read the `.csv` file using `readr::read_csv()` (the `readr` package is part of the `tidyverse`)
-
+### data preparation for graphs
 ```{r}
-concrete <- read_csv("../data/concrete.csv", col_types = cols())
+library(tidytext)
+
+
+text_lyrics_top_100 <- read.csv("../data/BB_top100_2015.csv") %>%
+  filter(!is.na(Lyrics))
+
+place_holder_text_star <- "starwrongstar"
+
+all_lyriscs <- text_lyrics_top_100 %>%
+  pull(Lyrics)
+
+all_lyriscs_text <- all_lyriscs %>%
+  paste(collapse = " ") %>%
+  str_replace_all("\\*", place_holder_text_star)
+
+all_lyriscs_text <- tibble(text = all_lyriscs_text)
+
+token_single_words <- unnest_tokens(all_lyriscs_text, output = word, input = text, token = "regex", pattern = " ") %>%
+  mutate(word = str_replace_all(word, place_holder_text_star, "*")) %>%
+  count(word, sort = TRUE)
+
+token_bigrams_2_words <- all_lyriscs_text %>%
+  unnest_tokens(bigram, text, token="ngrams", n=2) %>%
+  count(bigram, sort=TRUE) %>%
+  mutate(bigram = str_replace_all(bigram, place_holder_text_star, "*")) %>%
+  separate(bigram, c("word1", "word2"), sep=" ", remove = FALSE)
+
+token_bigrams_3_words <- all_lyriscs_text %>%
+  unnest_tokens(bigram, text, token="ngrams", n=3) %>%
+  count(bigram, sort=TRUE) %>%
+  mutate(bigram = str_replace_all(bigram, place_holder_text_star, "*")) %>%
+  separate(bigram, c("word1", "word2", "word3"), sep=" ", remove = FALSE)
+
+#text_lyrics_top_100[1]['Lyrics'] %>%
+#  unnest_tokens(output = word, input = text)
+
 ```
-
-
-Let us create a new attribute for visualization purposes, `strength_range`: 
-
+### code for graphs
 ```{r}
-new_concrete <- concrete %>%
-  mutate(strength_range = cut(Concrete_compressive_strength, 
-                              breaks = quantile(Concrete_compressive_strength, 
-                                                probs = seq(0, 1, 0.2))) )
+library(ggiraph)
+library(glue)
+library(htmltools)
+
+token_single_words_top_ten <- token_single_words %>%
+  slice_max(order_by = n, n = 10) %>%
+  rowwise() %>%
+  mutate(
+    unique_song_occurences = sum(str_detect(all_lyriscs, word), na.rm=TRUE)
+  ) %>%
+  ungroup()
+
+graph2A1 <- ggplot(token_single_words_top_ten, aes(y=fct_reorder(word, n), x=n)) +
+  geom_col_interactive(aes(data_id=word, tooltip=glue("{word}</br>total occurences: {n}</br>in {unique_song_occurences} songs"))) +
+  labs(y=NULL, x=NULL, title="Top ten most frequent words from top 100 Lyrics 2015") +
+  theme(plot.title.position = "plot") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)))
+
+token_bigrams_2_words_top_ten <- token_bigrams_2_words %>%
+  slice_max(order_by = n, n = 10) %>%
+  rowwise() %>%
+  mutate(
+    unique_song_occurences = sum(str_detect(all_lyriscs, bigram), na.rm=TRUE)
+  ) %>%
+  ungroup()
+
+graph2A2 <- ggplot(token_bigrams_2_words_top_ten, aes(y=fct_reorder(bigram, n), x=n)) +
+  geom_col_interactive(aes(data_id=bigram, tooltip=glue("{bigram}</br>total occurences: {n}</br>in {unique_song_occurences} songs"))) +
+  labs(y=NULL, x=NULL, title="Top ten most frequent bigrams length 2 from top 100 Lyrics 2015") +
+  theme(plot.title.position = "plot") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)))
+
+token_bigrams_3_words_top_ten <- token_bigrams_3_words %>%
+  slice_max(order_by = n, n = 10) %>%
+  rowwise() %>%
+  mutate(
+    unique_song_occurences = sum(str_detect(all_lyriscs, bigram), na.rm=TRUE)
+  ) %>%
+  ungroup()
+
+graph2A3 <- ggplot(token_bigrams_3_words_top_ten, aes(y=fct_reorder(bigram, n), x=n)) +
+  geom_col_interactive(aes(data_id=bigram, tooltip=glue("{bigram}</br>total occurences: {n}</br>in {unique_song_occurences} songs"))) +
+  labs(y=NULL, x=NULL, title="Top ten most frequent bigrams length 3 from top 100 Lyrics 2015") +
+  theme(plot.title.position = "plot") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)))
+
 ```
 
+## Frequency graphs of words and bigrams from the top 100 Lyrics of 2015
+{.tabset}
+-------------------------------------
 
-
-1. Explore the distribution of 2 of the continuous variables available in the dataset. Do ranges make sense? Comment on your findings.
-
-2. Use a _temporal_ indicator such as the one available in the variable `Age` (measured in days). Generate a plot similar to the one shown below. Comment on your results.
-
-```{r, echo = FALSE, out.width="80%", fig.align='center'}
-knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/concrete_strength.png")
+### words
+```{r, fig.alt ="Bar chart of the top 10 most frequent words from the top 100 Lyrics of 2015"}
+girafe(ggobj=graph2A1)
 ```
 
-
-3. Create a scatterplot similar to the one shown below. Pay special attention to which variables are being mapped to specific aesthetics of the plot. Comment on your results. 
-
-```{r, echo = FALSE, out.width="80%", fig.align='center'}
-knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/cement_plot.png")
+### bigrams length 2
+```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 2 from the top 100 Lyrics of 2015"}
+girafe(ggobj=graph2A2)
 ```
+
+### bigrams length 3
+```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 3 from the top 100 Lyrics of 2015"}
+girafe(ggobj=graph2A3)
+```
+
 
 
 
