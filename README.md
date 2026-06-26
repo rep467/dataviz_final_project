@@ -32,7 +32,7 @@ Find the code and report in the `project_02/` folder.
 
 ## Project 03
 
-In this project, I explored the 2022 data from the FSU Florida Climate Center and the text of the lyrics of the top 100 songs from 2015. The purpose of this project was to explore different types of graphs and text analysis using bigrams.
+In this project, I explored the 2022 data from the FSU Florida Climate Center and the text of the lyrics of the top 100 songs from 2015. The purpose of this project was to explore different types of graphs and to perform a text analysis using bigrams.
 
 **Sample data visualization:**
 
