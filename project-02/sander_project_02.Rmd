@@ -6,6 +6,7 @@ output:
     keep_md: true
     toc: true
     toc_float: true
+    self_contained: true
 ---
 
 # Data Visualization - Mini-Project 2
@@ -19,6 +20,8 @@ output:
 [Graph 2](#graph-2)
 
 [Graph 3](#graph-3)
+
+[Graph 4](#graph-4)
 
 [Discussion](#discussion)
 
@@ -34,6 +37,7 @@ library(tigris)
 library(data.table)
 library(glue)
 library(broom)
+library(htmltools)
 
 # Load world shapefile from Natural Earth
 # https://www.naturalearthdata.com/downloads/110m-cultural-vectors/
@@ -83,11 +87,27 @@ string_to_int_sec_vec <- Vectorize(string_to_int_sec)
 double_sec_to_string_vec <- Vectorize(double_sec_to_string)
 
 marathon_data <- marathon_data %>%
-  mutate(Official.Time.sec = string_to_int_sec_vec(Official.Time))
+  mutate(
+    Official.Time.sec = string_to_int_sec_vec(Official.Time),
+    Country=if_else(Country=="GER", "DEU", Country)
+    )
 
 # filtered marathon_data all rows with Country = USA
 marathon_data_USA <- marathon_data %>%
   filter(Country == "USA")
+
+
+# data prep marathon data by country
+marathon_data_by_Country <- marathon_data %>%
+  group_by(Country) %>%
+  summarise(
+    nrParticipants = n(),
+    Avg_Time_Sec  = mean(Official.Time.sec, na.rm = TRUE),
+    SD_Time_Sec   = sd(Official.Time.sec, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(avg_time_formatted = double_sec_to_string_vec(Avg_Time_Sec))
+
 
 # Columns for which to display values
 columns <- c("Official.Time.sec", "Age", "Country","State", "City")
@@ -114,23 +134,38 @@ glue("\nTotal entries:{nrow(marathon_data)}")
 
 ```
 
-The marathon data contains data from the participants of the 2017 Boston marathon. The set contains multiple variables such as age, name, state, country, city, and various metrics for the marathon time. One minor problem with the time is that the datatype is a string (HH:MM:SS) and not an easily readable number. As such some data conversion from the string time value to a number was necessary. (total sec = HH*3600 + MM*60 + SS). The above summary shows some stats for time taken in sec, age, and the number of unique Countries, States and Cities participints are from. (For states there are also some foreign states in this metric, there are participants from every us state in the data set). For the analysis below I was interested in any visible overall trends rather then the individual performance. So grouping the data by country or state for US data was necessary. 
+The marathon data contains data from the participants of the 2017 Boston marathon. The set contains multiple variables such as age, name, state, country, city, and various metrics for the marathon time. One minor problem with the time is that the datatype is a string (HH:MM:SS) and not an easily readable number. As such some data conversion from the string time value to a number was necessary. (total sec = HH*3600 + MM*60 + SS). The above summary shows some stats for time taken in sec, age, and the number of unique Countries, States and Cities participants are from. (For states there are also some foreign states in this metric, there are participants from every us state in the data set). For the analysis below I was interested in any visible overall trends rather then the individual performance. So grouping the data by country or state for US data was necessary. 
 
 ## Graph 1
 
+### bad example
+```{r, fig.alt="A bar graph showing the top ten countries by participation in the Boston Marathon 2017"}
+top_ten_countries_by_participation <- marathon_data_by_Country %>%
+  slice_max(order_by = nrParticipants, n = 10)
+
+
+ggplot(data = top_ten_countries_by_participation, aes(x=as.factor(Country), y=nrParticipants)) +
+  geom_col()
+```
+
+### reworked graph
+```{r, fig.alt="A bar graph showing the top ten countries by participation in the Boston Marathon 2017"}
+country_names = c("USA" ="USA", "CAN"="Canada", "GBR"="United Kingdom", "MEX"="Mexico", "CHN"= "China", "DEU"="Germany", "BRA"="Brazil", "AUS"="Australia", "JPN"="Japan", "ITA"="Italy")
+
+ggplot(data = top_ten_countries_by_participation, aes(x=nrParticipants, y=fct_reorder(Country, nrParticipants))) +
+  geom_col()+
+  scale_x_log10(expand = expansion(mult = c(0, 0.05)), breaks=c(100, 200, 400, 1870, 20945)) +
+  labs(x = NULL, y= NULL, title = "Top ten countries by participation in the Boston Marathon 2017")+
+  theme(plot.title.position = "plot")+
+  scale_y_discrete(labels=country_names)
+```
+
+The graph above shows the top ten countries by participation. A bad example for this graph is included with a more detailed description in regards to what is bad in the README.md.
+Most participants are from the USA with 20945. In second place by number of participants is Canada with 1870 participants.
+
+## Graph 2
+
 ```{r}
-# data prep 
-marathon_data_by_Country <- marathon_data %>%
-  group_by(Country) %>%
-  summarise(
-    nrParticipants = n(),
-    Avg_Time_Sec  = mean(Official.Time.sec, na.rm = TRUE),
-    SD_Time_Sec   = sd(Official.Time.sec, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  mutate(avg_time_formatted = double_sec_to_string_vec(Avg_Time_Sec))
-
-
 world_data <- left_join(world_shapes, marathon_data_by_Country, by=join_by(ISO_A3 == Country))
 
 # graph
@@ -164,20 +199,32 @@ graph1a_interactive <- girafe(ggobj = graph1a)
    
 ### Participants
 
-```{r, echo=FALSE}
-graph1_interactive
+```{r, echo=FALSE, fig.alt="World map showing from which countries the Boston marathon 2017 participants were."}
+browsable(
+  tags$div(
+    `aria-label` = "World map showing from which countries the Boston marathon 2017 participants were.",
+    role = "img",
+    graph1_interactive
+  )
+)
 ```   
  
 ### Average Time
-```{r, echo=FALSE}
-graph1a_interactive
+```{r, echo=FALSE, fig.alt="World map showing average finish times of each countries participants."}
+browsable(
+  tags$div(
+    `aria-label` = "World map showing average finish times of each countries participants.",
+    role = "img",
+    graph1a_interactive
+  )
+)
 ```   
 
 
 Graph 1 above shows an interactive graph of the number of participants and the average time for participants for each country. A countries name and stats can be seen by hovering over the name. The graph can be switched between visualizing participants and visualizing the average time by clicking on the respective tabs. In total there were participants of 91 different countries with the most coming from the USA. As a need of traveling to the marathon exists that is no real surprise. However, when switching to visualizing average time, Ethiopia, Kenya, and Burundi stand out with the lowest average time while also having very low participant numbers (Ethiopia: 5, Kenya: 8, and Burundi: 1).
 
 
-## Graph 2
+## Graph 3
 
 ```{r}
 # data prep
@@ -228,19 +275,33 @@ g_counties_highlight_average_finish_time <- girafe(ggobj = graph2a)
    
 ### Participants
 
-```{r, echo=FALSE}
-g_counties_highlight_participants
+```{r, echo=FALSE, fig.alt="usa map showing from which counties the Boston marathon 2017 participants were."}
+browsable(
+  tags$div(
+    `aria-label` = "USA map showing from which counties the Boston marathon 2017 participants were.",
+    role = "img",
+    g_counties_highlight_participants
+  )
+)
 ```   
  
 ### Average Time
-```{r, echo=FALSE}
-g_counties_highlight_average_finish_time
+```{r, echo=FALSE, fig.alt="USA map showing average finish times of each counties participants."}
+browsable(
+  tags$div(
+    `aria-label` = "USA map showing average finish times of each counties participants.",
+    role = "img",
+    g_counties_highlight_average_finish_time
+  )
+)
 ```   
+
+
 
 
 Graph 2 shows the same kind of values as Graph 1 but instead of showing those values for the world map, it shows those values for the USA. (Color values represent the same but the scale is different to visualize the differences between the states better). Just like before the location of the marathon, in this graph Massachusetts has with 4586 the most participants. When switching to visualizing the average time, it can clearly be seen that Massachusetts has the longest average time for the marathon (4:27:41) while Alaska has the best average time of 3:25:0 with just 52 participants.
 
-## Graph 3
+## Graph 4
 
 ```{r}
 
@@ -274,8 +335,13 @@ graph3a <- ggplot(coefs,aes(x = estimate,y = fct_rev(term))) +
              color = "purple") +
   #scale_x_log10() +
   theme_minimal()
+```
 
+```{r, fig.alt="Scatterplot showing the average finish time vs numbers of participants. A linear trend line shows a weak trend that countries with low participation seem to have better finish times."}
 graph3
+```
+
+```{r, fig.alt="Coefficient Plot for the prvious scatterplot:'Scatterplot showing the average finish time vs numbers of participants'."}
 graph3a
   
 ```
@@ -290,7 +356,9 @@ I originally wanted to make a comparison based on age but as I was working on th
 
 ### What story could you tell with your plots? What difficulties did you encounter while creating the visualizations? What additional approaches do you think can be use to explore the data you selected?
 
-The story I explored was that the average time seems to increase with higher participation numbers. While displaying the data by states and country shows this trend, it does not explain why. Some further data like self reported training times could verify my possible explanation. Another possible refinement of this analysis would be to check how other given variables such as age influence the time. 
+The story I explored was that the average time seems to increase with higher participation numbers. While displaying the data by states and country shows this trend, it does not explain why. Some further data like self reported training times could verify my possible explanation. Another possible refinement of this analysis would be to check how other given variables such as age influence the time.
+
+However, as previously mentioned in this report the observed trend is likely caused by the difficulty traveling introduces. If travel is more difficult many people will not attend and those that will likely take the marathon more seriously. Another possibility is that with low participation those times are just outliers. An analysis of marathon data might reveal additional info.
 
 A difficulty with the data set was that I was interested in data for countries and states while the data had individual entries for participants. This was solved by grouping the data by country or state and filtering. The grouped data was then combined with the map data. As encountered in the previous homework, the map data for world was missing an ISO_A3 value for France and Sweden. This was easily solved by filling that value with its ADM0_A3 value if ISO_A3 is not present.
 
