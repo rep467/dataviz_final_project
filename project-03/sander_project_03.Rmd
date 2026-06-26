@@ -134,17 +134,17 @@ graph1c
 (e) Create a plot of your choice that uses the attribute for precipitation _(values of -99.9 for temperature or -99.99 for precipitation represent missing data)_.
 
 ### bad graph example
-This graph was created as an example 
+This graph was created as a bad example for data visualization design. 
 ```{r, fig.alt="A bar graph showing precipitaition per month."}
 graph1e <- ggplot(data=weather_tpa, aes(x=month, y=precipitation)) +
-  geom_col()
+  geom_col(aes(fill=month))
 
 graph1e
 ```
 
 ### fixed graph *'bad graph example'*
 
-```{r}
+```{r ,fig.alt="A bar graph showing precipitaition per month."}
 graph1e <- ggplot(data=weather_tpa, fill="blue", aes(x=as.factor(month), y=precipitation)) +
   geom_col(fill="blue")+
   labs(x=NULL, y="Precipitaition (inch)", title = "Precipitaition Tampa International Airport 2022")+
