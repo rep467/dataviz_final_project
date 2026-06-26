@@ -21,7 +21,6 @@ Through these interactive graph, I noticed that the dataset is missing spaces in
 <img src="../figures/project-3-graph-7-2-non-interactive-showcase.png"/>
 
 
-
 ## 2 Accessibility
 
 For accessibility fig.alt text were included for each graph, and colorblind safe colors and pallets were chosen.(various viridis color pallets used and other colors were tested using this tool <https://rgblind.com/color-blindness-simulator>)
