@@ -92,14 +92,14 @@ months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", 
 
 
 graph1b <- ggplot(data=weather_tpa, aes(x=max_temp, fill=month)) +
-  scale_x_continuous(breaks=c(60, 70, 80, 90)) +
-  scale_y_continuous(breaks=c(0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.3, 0.35, 0.4)) +
+  scale_x_continuous(breaks=c(50, 60, 70, 80, 90)) +
+  scale_y_continuous(breaks=c(0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.3, 0.35)) +
   scale_fill_viridis_c() +
   geom_density() +
   facet_wrap(vars(month), labeller = as_labeller(months)) +
   theme_bw() +
   theme(legend.position = "none") +
-  labs(x="Maximum temperature", y=NULL, fill=NULL)
+  labs(x="Maximum temperature", y=NULL, fill=NULL, title = "Density plots for each month in 2022")
   
 
 graph1b
@@ -108,16 +108,55 @@ graph1b
 (d) Generate a plot like the chart below:
 
 
+
+
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_ridges_plasma.png")
 ```
 
 Hint: use the`{ggridges}` package, and the `geom_density_ridges()` function paying close attention to the `quantile_lines` and `quantiles` parameters. The plot above uses the `plasma` option (color scale) for the _viridis_ palette.
 
+```{r}
+library(ggridges)
+
+months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
+            "7"="July", "8"="August", "9"="September", "10"="October", "11"="November", "12"="December")
+
+graph1c <- ggplot(data=weather_tpa, aes(x=max_temp, y=as.factor(month), fill=..x..)) +
+  scale_fill_viridis_c(option="plasma") +
+  scale_x_continuous(breaks=c(40, 50, 60, 70, 80, 90, 100)) +
+  scale_y_discrete(labels = months) +
+  geom_density_ridges_gradient(quantile_lines = TRUE, quantiles = 0.5) +
+  theme_minimal()+
+  labs(y=NULL, x="Maximum temperature (in Fahrenheit degrees)", fill=NULL)
+
+graph1c
+```
+
 
 (e) Create a plot of your choice that uses the attribute for precipitation _(values of -99.9 for temperature or -99.99 for precipitation represent missing data)_.
 
+### bad graph example
+```{r}
+graph1e <- ggplot(data=weather_tpa, aes(x=month, y=precipitation)) +
+  geom_col()
 
+graph1e
+```
+
+### fixed graph *'bad graph example'*
+
+```{r}
+graph1e <- ggplot(data=weather_tpa, fill="blue", aes(x=as.factor(month), y=precipitation)) +
+  geom_col(fill="blue")+
+  labs(x=NULL, y="precipitaition in inch", title = "Precipitaition Tampa International Airport 2022")+
+  scale_x_discrete(labels = months)+
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust = 1))
+
+graph1e
+```
 
 ## PART 2 
 
