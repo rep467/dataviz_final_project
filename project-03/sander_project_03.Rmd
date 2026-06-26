@@ -258,17 +258,35 @@ graph2A3 <- ggplot(token_bigrams_3_words_top_ten, aes(y=fct_reorder(bigram, n), 
 
 ### words
 ```{r, fig.alt ="Bar chart of the top 10 most frequent words from the top 100 Lyrics of 2015"}
-girafe(ggobj=graph2A1)
+browsable(
+  tags$div(
+    `aria-label` = "Bar chart of the top 10 most frequent words from the top 100 Lyrics of 2015",
+    role = "img",
+    girafe(ggobj=graph2A1)
+  )
+)
 ```
 
 ### bigrams length 2
 ```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 2 from the top 100 Lyrics of 2015"}
-girafe(ggobj=graph2A2)
+browsable(
+  tags$div(
+    `aria-label` = "Bar chart of the top 10 most frequent bigrams length 2 from the top 100 Lyrics of 2015",
+    role = "img",
+    girafe(ggobj=graph2A2)
+  )
+)
 ```
 
 ### bigrams length 3
 ```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 3 from the top 100 Lyrics of 2015"}
-girafe(ggobj=graph2A3)
+browsable(
+  tags$div(
+    `aria-label` = "Bar chart of the top 10 most frequent bigrams length 3 from the top 100 Lyrics of 2015",
+    role = "img",
+    girafe(ggobj=graph2A3)
+  )
+)
 ```
 
 
