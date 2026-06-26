@@ -25,9 +25,9 @@ Find the code and report in the `project_02/` folder.
 
 **Sample data visualization: (check html file for an interactive version)**
 
-*[Graph of country of origin from participants]*
+*[graph showing finish time by county]*
 
-<img src="figures/project-2-graph1-non-interactive-countries.png" width="80%" height="80%"/>
+<img src="figures/project-2-graph2-1-non-interactive.png"/>
 
 
 ## Project 03
@@ -36,7 +36,9 @@ In this project, I explored the 2022 data from the FSU Florida Climate Center an
 
 **Sample data visualization:**
 
-*[include your favorite visualization from this project here]* <img src="https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/concrete_density.png" width="80%" height="80%"/>
+*[graph showing probability density curve for each month in 2022 from the FSU Climate center data]*
+
+<img src="figures/project-3-graph-4.png"/>
 
 ### Moving Forward
 

@@ -3,8 +3,11 @@ title: "Data Visualization - Mini-Project 2"
 author: "Per Sander `psander6918@floridapoly.edu`"
 output:
   html_document:
-    df_print: paged
+    keep_md: true
+    toc: true
+    toc_float: true
 ---
+
 # Data Visualization - Mini-Project 2
 ## Legend
 [Library init and map data loading](#library-init-and-map-data-loading)
