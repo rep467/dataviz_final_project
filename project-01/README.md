@@ -8,7 +8,7 @@ In this project fuel_data which contains new cars by year is analyzed with a foc
 
 The key takeaways: MPG has not increased between 1984 and to around 2010 for car models using premium or regular fuel type. At the same time, car models with better fuel economy reaching higher MPG were produced. Around 2010 average mpg for new models started to increase slightly. While electric vehicles are more efficient, comparing the MPGe value to MPG is misleading and should not be done without the introduction of a more realistic conversion of gallons to kWh.
 
-The report can be found in sander_project_01.html or sander_project_01.md (The md file in github does not display interactive graphs correctly)
+The report can be found in sander_project_01.html or sander_project_01.md (The md file on github does not display interactive graphs correctly)
 
 ## 1 Interactive Chart
 

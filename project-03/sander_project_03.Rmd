@@ -137,7 +137,8 @@ graph1c
 This graph was created as a bad example for data visualization design. 
 ```{r, fig.alt="A bar graph showing precipitaition per month."}
 graph1e <- ggplot(data=weather_tpa, aes(x=month, y=precipitation)) +
-  geom_col(aes(fill=month))
+  geom_col(aes(fill=month)) +
+  coord_cartesian(ylim = c(2, 12.0))
 
 graph1e
 ```
