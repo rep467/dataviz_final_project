@@ -44,14 +44,10 @@ For this project a bad chart was created on purpose.
 
 ### bad example
 
-<img src="../figures/project-2-graph-1-bad-example.png"/>
+<img src="../figures/project-3-graph-5-bad-example.png"/>
 
 ### reworked graph
 
-<img src="../figures/project-2-graph-1-reworked.png"/>
+<img src="../figures/project-3-graph-6.png"/>
 
-
-The bad graph is hard to read as the value for USA is very large while all other values are comparatively small. Furthermore, some aesthetics like labels and including title can be improved. 
-The axis labels were improved by using Country names instead of a 3 letter country code and x and y was switched to have more space for the country names.
-The scale was changed into a log arithmetic scale for readability. However, While this can visualize small values better it makes the overall scale less intuitive to read. 
-To address this issue axis markers for specific participation numbers were added.
+The bad graph has multiple issues from aesthetics to miss use of ggplot. The months are not labeled correctly and are treated as a continuous variable rather then a discrete variable. This can be seen by both the color applied as a gradient as the well as the x axis legend. This is fixed by using x=as.factor(month) instead of x=month in aes. The next problem is that the axis labels still do not clearly indicate what is being displayed. For the x axis month names were used instead of numbers and unnecessary legends were removed. Besides non descriptive labels the range of the y axis is wrong and indicates wrongly that there was no precipitation for January, February, and October. The y axis was fixed by showing the range from 0 to 12.5 and by including descriptive labels for the inch value and adding of a mm axis on the right.

@@ -4,14 +4,31 @@
 
 ## Mini-Project 2
 
-In this project, I explored data from the Boston marathon 2017. 
-The goal of the project was to explore interactive graphs and spatial visualization. 
-The library ggigraph with geom_sf was used for the graphs. 
-The data included data such as age country of origin and various times. 
+In this project, I explored data from the Boston marathon 2017. The goal of the project was to explore interactive graphs and spatial visualization. The library ggigraph with geom_sf was used for the graphs. The data included data such as age country of origin and various times.
 
-The data seems to have a weak trend that counties and countries with lower participation seem to be doing better then counties and countries with high participation.
-However, these results can be affected by the very low sample size of countries and counties with low participation. 
-Another possible explanation is that as travel becomes more difficult the remaining participants take the marathon more seriously.
+The data seems to have a weak trend that counties and countries with lower participation seem to be doing better then counties and countries with high participation. However, these results can be affected by the very low sample size of countries and counties with low participation. Another possible explanation is that as travel becomes more difficult the remaining participants take the marathon more seriously.
+
+### files
+
+- All code for this project is in sander_project_02.Rmd
+- The generated report is in sander_project_02.html (Interactive graphs work in this format)
+- A github friendly version is also available in sander_project_02.md (However, this version does not support the interactive graphs in github)
+
+### data files
+
+The data files are in:
+
+../data/
+
+Used by this project:
+
+- ../data/marathon_results_2017.csv
+- ../data/ne_110m_admin_0_countries/
+- ../data/ne_110m_admin_1_states_provinces/
+
+DataSources:
+
+- <https://www.naturalearthdata.com/downloads/110m-cultural-vectors/>
 
 ## 1 Interactive Chart
 
@@ -27,7 +44,7 @@ The additonal data shows what influence the type of cars had to the overall popu
 
 ## 2 Accessibility
 
-For accessibility fig.alt text were included for each graph, and colorblind safe colors and pallets were chosen.(viridis magma and xxx used and blue and black colors tested using this tool <https://rgblind.com/color-blindness-simulator>)
+For accessibility fig.alt text were included for each graph, and colorblind safe colors and pallets were chosen.(viridis magma and viridis was used other graph were testing using this tool <https://rgblind.com/color-blindness-simulator>)
 
 The library ggigraph did not seem to include the fig.alt text. The following workaround was used:
 
@@ -47,16 +64,14 @@ This workaround puts the graph into a div container with text for screen readers
 
 ## 3 bad chart redesign
 
-All graphs were slightly reworked but the original graph 2 is still included as a bad example and for before/after comparisons.
+For this project a bad chart was created on purpose.
 
 ### bad example
 
-<img src="../figures/project-1-graph3-bad-example.png"/>
+<img src="../figures/project-2-graph-1-bad-example.png"/>
 
 ### reworked graph
 
-<img src="../figures/project-1-graph4-non-interactive.png"/>
+<img src="../figures/project-2-graph-1-reworked.png"/>
 
-The graph before was a scatterplot with the purpose of showing a trend of average mpg from year 1984 to 2017. The graph afterwards is an interactive boxplot graph *(check out sander_project_01.html for an interactive version)*.
-
-The main problem of the original graph was that the trend was visible in the trend line but not in the scatterplot data. The problem was that even though points were slightly opaque, to many points had the same value and stacked on each other hid how many points were at each point. One solution used in other graphs in this project would been to inccrease some jitter in the horizontal spacing of the points. However, for this graph I decided to redesign it as an interactive boxplot. A boxplot visualizes the distribution of a population while also making outliers easily visible. The interactive part of the graph gives some additional information to the population for each year such as the actual average, and what car types within that distribution made up the population.
+The bad graph is hard to read as the value for USA is very large while all other values are comparatively small. Furthermore, some aesthetics like labels and including title can be improved. The axis labels were improved by using Country names instead of a 3 letter country code and x and y was switched to have more space for the country names. The scale was changed into a log arithmetic scale for readability. However, While this can visualize small values better it makes the overall scale less intuitive to read. To address this issue axis markers for specific participation numbers were added.
