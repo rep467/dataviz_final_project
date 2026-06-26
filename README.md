@@ -6,18 +6,17 @@ The following are the 3 projects created for the data visualization class
 
 The files for the projects can be found in: (code and reports)
 
-* /project-01/
-* /project-02/
-* /project-03/
+- /project-01/
+- /project-02/
+- /project-03/
 
 The data files for all projects can be found in:
 
-* /data/
+- /data/
 
 The figures of all projects are not just in the report but also in:
 
-* /figures/
-
+- /figures/
 
 ## Project 01
 
