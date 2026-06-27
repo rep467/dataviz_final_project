@@ -25,7 +25,6 @@ Used by this project:
 - ../data/BB_top100_2015.csv
 - ../data/tpa_weather_2022.csv
 
-
 ## 1 Interactive Chart
 
 The following interactive barchart graph was created: *(check out sander_project_03.html for an interactive version)*
