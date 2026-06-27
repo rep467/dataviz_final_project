@@ -32,15 +32,13 @@ DataSources:
 
 ## 1 Interactive Chart
 
-The following interactive boxplot graph was created: *(check out sander_project_01.html for an interactive version)*
+The following interactive map was created: *(check out sander_project_02.html for an interactive version)*
 
-<img src="../figures/project-1-graph4-non-interactive.png"/>
+<img src="../figures/project-2-graph2-non-interactive.png"/>
 
-When hovering over the boxplots for each year additional information for the data for that year is shown as seen in the image below:
+When hovering over the map for each country some additional info will be shown. Furthermore, the map comes in two different visualization modes which can switched using the tabs above.
 
-<img src="../figures/project-1-graph4-non-interactive-showcase.png"/>
-
-The additonal data shows what influence the type of cars had to the overall population as well as the exact average for the population.
+<img src="../figures/project-2-graph2-non-interactive-showcase.png"/>
 
 ## 2 Accessibility
 
