@@ -147,6 +147,14 @@ browsable(
 
 ```
 
+# Saving Graph 2
+
+```{r, warning=FALSE, message=FALSE}
+library(htmlwidgets)
+
+saveWidget(widget=interactive_graph, file = "../figures/project-1-graph-2-interactive-graph-.html", selfcontained = TRUE)
+```
+
 ## Data summary
 
 ```{r, warning=FALSE, message=FALSE}

@@ -3,6 +3,7 @@ title: "Data Visualization - Mini-Project 2"
 author: "Per Sander `psander6918@floridapoly.edu`"
 output:
   html_document:
+    theme: !expr bslib::bs_theme(version = 5)
     keep_md: true
     toc: true
     toc_float: true
@@ -38,6 +39,9 @@ library(data.table)
 library(glue)
 library(broom)
 library(htmltools)
+library(htmlwidgets)
+library(bslib)
+library(shiny)
 
 # Load world shapefile from Natural Earth
 # https://www.naturalearthdata.com/downloads/110m-cultural-vectors/
@@ -210,6 +214,7 @@ browsable(
 ```   
  
 ### Average Time
+
 ```{r, echo=FALSE, fig.alt="World map showing average finish times of each countries participants.", warning=FALSE, message=FALSE}
 browsable(
   tags$div(
@@ -218,10 +223,25 @@ browsable(
     graph1a_interactive
   )
 )
-```   
+```
 
 
-Graph 1 above shows an interactive graph of the number of participants and the average time for participants for each country. A countries name and stats can be seen by hovering over the name. The graph can be switched between visualizing participants and visualizing the average time by clicking on the respective tabs. In total there were participants of 91 different countries with the most coming from the USA. As a need of traveling to the marathon exists that is no real surprise. However, when switching to visualizing average time, Ethiopia, Kenya, and Burundi stand out with the lowest average time while also having very low participant numbers (Ethiopia: 5, Kenya: 8, and Burundi: 1).
+## Graph 2 text
+
+Graph 2 above shows an interactive graph of the number of participants and the average time for participants for each country. A countries name and stats can be seen by hovering over the name. The graph can be switched between visualizing participants and visualizing the average time by clicking on the respective tabs. In total there were participants of 91 different countries with the most coming from the USA. As a need of traveling to the marathon exists that is no real surprise. However, when switching to visualizing average time, Ethiopia, Kenya, and Burundi stand out with the lowest average time while also having very low participant numbers (Ethiopia: 5, Kenya: 8, and Burundi: 1).
+
+## saving Graph 2
+
+```{r, warning=FALSE, message=FALSE}
+library(htmlwidgets)
+
+# saving {.tabset} does not work and multiple workarounds resulted in broken interactive graphs.
+# I recommend to save interactive graphs in there own .rmd file to generate self contained html files
+# For this project I decided to save each tab of the graph as its own html file as a workaround
+
+saveWidget(widget=graph1_interactive, file = "../figures/project-2-graph-2-interactive-graph-tab-1.html", selfcontained = TRUE)
+saveWidget(widget=graph1a_interactive, file = "../figures/project-2-graph-2-interactive-graph-tab-2.html", selfcontained = TRUE)
+```
 
 
 ## Graph 3
@@ -297,9 +317,22 @@ browsable(
 ```   
 
 
+## Graph 3 text
 
+Graph 3 shows the same kind of values as Graph 1 but instead of showing those values for the world map, it shows those values for the USA. (Color values represent the same but the scale is different to visualize the differences between the states better). Just like before the location of the marathon, in this graph Massachusetts has with 4586 the most participants. When switching to visualizing the average time, it can clearly be seen that Massachusetts has the longest average time for the marathon (4:27:41) while Alaska has the best average time of 3:25:0 with just 52 participants.
 
-Graph 2 shows the same kind of values as Graph 1 but instead of showing those values for the world map, it shows those values for the USA. (Color values represent the same but the scale is different to visualize the differences between the states better). Just like before the location of the marathon, in this graph Massachusetts has with 4586 the most participants. When switching to visualizing the average time, it can clearly be seen that Massachusetts has the longest average time for the marathon (4:27:41) while Alaska has the best average time of 3:25:0 with just 52 participants.
+## saving Graph 3
+
+```{r, warning=FALSE, message=FALSE}
+library(htmlwidgets)
+
+# saving {.tabset} does not work and multiple workarounds resulted in broken interactive graphs.
+# I recommend to save interactive graphs in there own .rmd file to generate self contained html files
+# For this project I decided to save each tab of the graph as its own html file as a workaround
+
+saveWidget(widget=g_counties_highlight_participants, file = "../figures/project-2-graph-3-interactive-graph-tab-1.html", selfcontained = TRUE)
+saveWidget(widget=g_counties_highlight_average_finish_time, file = "../figures/project-2-graph-3-interactive-graph-tab-2.html", selfcontained = TRUE)
+```
 
 ## Graph 4
 

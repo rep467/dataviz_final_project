@@ -290,8 +290,23 @@ browsable(
 )
 ```
 
+## Frequency graph part 2 text
 The most common word is *"I"* with 1615 occurrences in 98 songs which means it is in every song in the dataset as only 98 of the 100 have lyrics in the dataset. Among top ten is one other word *"a"* which also occurred in every song. *"I dont"* is the most common bigram of length 2 with 140 occurrences in 37 songs. However, *"and i"* has 123 occurrences but does appear in 68 songs. The most common bigram of length 3 is "i shake it" occurring 36 times in the Taylor swift song *shake it off*. Within the top ten only 4 bigrams occurred in more then one song and those also only in 2 - 4 times. 
 
 
 Interesting to note is that for bigrams length 3 "shake it off" has a frequency of 32 and "I shake it" has a frequency of 36. Both bigrams come from the sentence "I shake it off" in the Taylor swift song "shake it off". If they come from the same sentence within the same song how is there frequency different ? It turns out the dataset is missing some spaces "i shake it offhey hey" resulting in wrong bigram counts. The exact frequency of this issue can only be determined by checking each song individually.
+
+## saving Frequency graphs of part2
+```{r, warning=FALSE, message=FALSE}
+library(htmlwidgets)
+
+# saving {.tabset} does not work and multiple workarounds resulted in broken interactive graphs.
+# I recommend to save interactive graphs in there own .rmd file to generate self contained html files
+# For this project I decided to save each tab of the graph as its own html file as a workaround
+
+saveWidget(widget=girafe(ggobj=graph2A1), file = "../figures/project-3-part-2-interactive-graph-tab-1.html", selfcontained = TRUE)
+saveWidget(widget=girafe(ggobj=graph2A2), file = "../figures/project-3-part-2-interactive-graph-tab-2.html", selfcontained = TRUE)
+saveWidget(widget=girafe(ggobj=graph2A3), file = "../figures/project-3-part-2-interactive-graph-tab-3.html", selfcontained = TRUE)
+
+```
 
