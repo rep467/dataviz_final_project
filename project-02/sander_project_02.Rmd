@@ -61,7 +61,7 @@ us_counties_shapes <- shift_geometry(us_counties_shapes, geoid_column = NULL, pr
 
 ## Data Loading and Summary
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 marathon_csv = "../data/marathon_results_2017.csv"
 marathon_data = read.csv(marathon_csv)
 
@@ -139,7 +139,7 @@ The marathon data contains data from the participants of the 2017 Boston maratho
 ## Graph 1
 
 ### bad example
-```{r, fig.alt="A bar graph showing the top ten countries by participation in the Boston Marathon 2017"}
+```{r, fig.alt="A bar graph showing the top ten countries by participation in the Boston Marathon 2017", warning=FALSE, message=FALSE}
 top_ten_countries_by_participation <- marathon_data_by_Country %>%
   slice_max(order_by = nrParticipants, n = 10)
 
@@ -149,7 +149,7 @@ ggplot(data = top_ten_countries_by_participation, aes(x=as.factor(Country), y=nr
 ```
 
 ### reworked graph
-```{r, fig.alt="A bar graph showing the top ten countries by participation in the Boston Marathon 2017"}
+```{r, fig.alt="A bar graph showing the top ten countries by participation in the Boston Marathon 2017", warning=FALSE, message=FALSE}
 country_names = c("USA" ="USA", "CAN"="Canada", "GBR"="United Kingdom", "MEX"="Mexico", "CHN"= "China", "DEU"="Germany", "BRA"="Brazil", "AUS"="Australia", "JPN"="Japan", "ITA"="Italy")
 
 ggplot(data = top_ten_countries_by_participation, aes(x=nrParticipants, y=fct_reorder(Country, nrParticipants))) +
@@ -165,7 +165,7 @@ Most participants are from the USA with 20945. In second place by number of part
 
 ## Graph 2
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 world_data <- left_join(world_shapes, marathon_data_by_Country, by=join_by(ISO_A3 == Country))
 
 # graph
@@ -199,7 +199,7 @@ graph1a_interactive <- girafe(ggobj = graph1a)
    
 ### Participants
 
-```{r, echo=FALSE, fig.alt="World map showing from which countries the Boston marathon 2017 participants were."}
+```{r, echo=FALSE, fig.alt="World map showing from which countries the Boston marathon 2017 participants were.", warning=FALSE, message=FALSE}
 browsable(
   tags$div(
     `aria-label` = "World map showing from which countries the Boston marathon 2017 participants were.",
@@ -210,7 +210,7 @@ browsable(
 ```   
  
 ### Average Time
-```{r, echo=FALSE, fig.alt="World map showing average finish times of each countries participants."}
+```{r, echo=FALSE, fig.alt="World map showing average finish times of each countries participants.", warning=FALSE, message=FALSE}
 browsable(
   tags$div(
     `aria-label` = "World map showing average finish times of each countries participants.",
@@ -226,7 +226,7 @@ Graph 1 above shows an interactive graph of the number of participants and the a
 
 ## Graph 3
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 # data prep
 marathon_data_by_County <- marathon_data_USA %>%
   group_by(State) %>%
@@ -303,7 +303,7 @@ Graph 2 shows the same kind of values as Graph 1 but instead of showing those va
 
 ## Graph 4
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 graph3 <- ggplot(data=world_data %>% filter(!is.na(nrParticipants) & nrParticipants>0), aes(y=Avg_Time_Sec, x=nrParticipants)) +
   geom_point(aes(size = nrParticipants)) +
@@ -337,11 +337,11 @@ graph3a <- ggplot(coefs,aes(x = estimate,y = fct_rev(term))) +
   theme_minimal()
 ```
 
-```{r, fig.alt="Scatterplot showing the average finish time vs numbers of participants. A linear trend line shows a weak trend that countries with low participation seem to have better finish times."}
+```{r, fig.alt="Scatterplot showing the average finish time vs numbers of participants. A linear trend line shows a weak trend that countries with low participation seem to have better finish times.", warning=FALSE, message=FALSE}
 graph3
 ```
 
-```{r, fig.alt="Coefficient Plot for the prvious scatterplot:'Scatterplot showing the average finish time vs numbers of participants'."}
+```{r, fig.alt="Coefficient Plot for the prvious scatterplot:'Scatterplot showing the average finish time vs numbers of participants'.", warning=FALSE, message=FALSE}
 graph3a
   
 ```

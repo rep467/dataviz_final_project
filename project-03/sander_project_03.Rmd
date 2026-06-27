@@ -30,11 +30,11 @@ Using the 2022 data:
 
 (a) Create a plot like the one below:
 
-```{r, echo = FALSE, out.width="80%", fig.align='center'}
+```{r, echo = FALSE, out.width="80%", fig.align='center', warning=FALSE, message=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_facet.png")
 ```
 
-```{r, fig.alt="A histogram showing the maximum temperatures in each month and there frequency by nr of days."}
+```{r, fig.alt="A histogram showing the maximum temperatures in each month and there frequency by nr of days.", warning=FALSE, message=FALSE}
 months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
             "7"="July", "8"="August", "9"="September", "10"="October", "11"="November", "12"="December")
 
@@ -60,13 +60,13 @@ Hint: the option `binwidth = 3` was used with the `geom_histogram()` function.
 
 (b) Create a plot like the one below:
 
-```{r, echo = FALSE, out.width="80%", fig.align='center'}
+```{r, echo = FALSE, out.width="80%", fig.align='center', warning=FALSE, message=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_density.png")
 ```
 
 Hint: check the `kernel` parameter of the `geom_density()` function, and use `bw = 0.5`.
 
-```{r, fig.alt="A graph showing the probability density for maximum temperature for the entire year."}
+```{r, fig.alt="A graph showing the probability density for maximum temperature for the entire year.", warning=FALSE, message=FALSE}
 
 
 graph1b <- ggplot(data=weather_tpa, aes(x=max_temp)) +
@@ -80,13 +80,13 @@ graph1b
 
 (c) Create a plot like the one below:
 
-```{r, echo = FALSE, out.width="80%", fig.align='center'}
+```{r, echo = FALSE, out.width="80%", fig.align='center', warning=FALSE, message=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_density_facet.png")
 ```
 
 Hint: default options for `geom_density()` were used. 
 
-```{r fig.alt="Graphs showing the probability density for maximum temperature for each month."}
+```{r fig.alt="Graphs showing the probability density for maximum temperature for each month.", warning=FALSE, message=FALSE}
 months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
             "7"="July", "8"="August", "9"="September", "10"="October", "11"="November", "12"="December")
 
@@ -107,13 +107,13 @@ graph1b
 
 (d) Generate a plot like the chart below:
 
-```{r, echo = FALSE, out.width="80%", fig.align='center'}
+```{r, echo = FALSE, out.width="80%", fig.align='center', warning=FALSE, message=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/figures/tpa_max_temps_ridges_plasma.png")
 ```
 
 Hint: use the`{ggridges}` package, and the `geom_density_ridges()` function paying close attention to the `quantile_lines` and `quantiles` parameters. The plot above uses the `plasma` option (color scale) for the _viridis_ palette.
 
-```{r, fig.alt="A graph showing the probability density for maximum temperature for each month with a marked median."}
+```{r, fig.alt="A graph showing the probability density for maximum temperature for each month with a marked median.", warning=FALSE, message=FALSE}
 library(ggridges)
 
 months <- c("1"="January", "2"="February", "3"="March", "4"="April", "5"="May", "6"="June", 
@@ -135,7 +135,7 @@ graph1c
 
 ### bad graph example
 This graph was created as a bad example for data visualization design. 
-```{r, fig.alt="A bar graph showing precipitaition per month."}
+```{r, fig.alt="A bar graph showing precipitaition per month.", warning=FALSE, message=FALSE}
 graph1e <- ggplot(data=weather_tpa, aes(x=month, y=precipitation)) +
   geom_col(aes(fill=month)) +
   coord_cartesian(ylim = c(2, 12.0))
@@ -145,7 +145,7 @@ graph1e
 
 ### fixed graph *'bad graph example'*
 
-```{r ,fig.alt="A bar graph showing precipitaition per month."}
+```{r ,fig.alt="A bar graph showing precipitaition per month.", warning=FALSE, message=FALSE}
 graph1e <- ggplot(data=weather_tpa, fill="blue", aes(x=as.factor(month), y=precipitation)) +
   geom_col(fill="blue")+
   labs(x=NULL, y="Precipitaition (inch)", title = "Precipitaition Tampa International Airport 2022")+
@@ -165,7 +165,7 @@ graph1e
 - [Billboard Top 100 Lyrics](https://raw.githubusercontent.com/aalhamadani/dataviz_final_project/main/data/BB_top100_2015.csv)
 
 ### data preparation for graphs
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(tidytext)
 
 
@@ -204,7 +204,7 @@ token_bigrams_3_words <- all_lyriscs_text %>%
 
 ```
 ### code for graphs
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(ggiraph)
 library(glue)
 library(htmltools)
@@ -258,7 +258,7 @@ graph2A3 <- ggplot(token_bigrams_3_words_top_ten, aes(y=fct_reorder(bigram, n), 
 -------------------------------------
 
 ### words
-```{r, fig.alt ="Bar chart of the top 10 most frequent words from the top 100 Lyrics of 2015",  echo=FALSE}
+```{r, fig.alt ="Bar chart of the top 10 most frequent words from the top 100 Lyrics of 2015",  echo=FALSE, warning=FALSE, message=FALSE}
 browsable(
   tags$div(
     `aria-label` = "Bar chart of the top 10 most frequent words from the top 100 Lyrics of 2015",
@@ -269,7 +269,7 @@ browsable(
 ```
 
 ### bigrams length 2
-```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 2 from the top 100 Lyrics of 2015",  echo=FALSE}
+```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 2 from the top 100 Lyrics of 2015",  echo=FALSE, warning=FALSE, message=FALSE}
 browsable(
   tags$div(
     `aria-label` = "Bar chart of the top 10 most frequent bigrams length 2 from the top 100 Lyrics of 2015",
@@ -280,7 +280,7 @@ browsable(
 ```
 
 ### bigrams length 3
-```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 3 from the top 100 Lyrics of 2015",  echo=FALSE}
+```{r, fig.alt ="Bar chart of the top 10 most frequent bigrams length 3 from the top 100 Lyrics of 2015",  echo=FALSE, warning=FALSE, message=FALSE}
 browsable(
   tags$div(
     `aria-label` = "Bar chart of the top 10 most frequent bigrams length 3 from the top 100 Lyrics of 2015",

@@ -14,11 +14,11 @@ The report can be found in sander_project_01.html or sander_project_01.md (The m
 
 The following interactive boxplot graph was created: *(check out sander_project_01.html for an interactive version)*
 
-<img src="../figures/project-1-graph4-non-interactive.png"/>
+<img src="../figures/project-1-graph3-non-interactive.png"/>
 
 When hovering over the boxplots for each year additional information for the data for that year is shown as seen in the image below:
 
-<img src="../figures/project-1-graph4-non-interactive-showcase.png"/>
+<img src="../figures/project-1-graph3-non-interactive-showcase.png"/>
 
 The additonal data shows what influence the type of cars had to the overall population as well as the exact average for the population.
 
@@ -48,11 +48,11 @@ All graphs were slightly reworked but the original graph 2 is still included as 
 
 ### bad example
 
-<img src="../figures/project-1-graph3-bad-example.png"/>
+<img src="../figures/project-1-graph2-bad-example.png"/>
 
 ### reworked graph
 
-<img src="../figures/project-1-graph4-non-interactive.png"/>
+<img src="../figures/project-1-graph3-non-interactive.png"/>
 
 The graph before was a scatterplot with the purpose of showing a trend of average mpg from year 1984 to 2017. The graph afterwards is an interactive boxplot graph *(check out sander_project_01.html for an interactive version)*.
 

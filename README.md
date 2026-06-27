@@ -28,7 +28,7 @@ Checkout /project-01/Readme.md for more info
 
 *[Boxplot of mpg of cars by year]*
 
-<img src="figures/project-1-graph4-non-interactive.png"/>
+<img src="figures/project-1-graph3-non-interactive.png"/>
 
 ## Project 02
 
@@ -40,7 +40,7 @@ Find the code, report, and readme in the `project_02/` folder for more info.
 
 *[graph showing finish time by county]*
 
-<img src="figures/project-2-graph2-1-non-interactive.png"/>
+<img src="figures/project-2-graph3-1-non-interactive.png"/>
 
 ## Project 03
 
