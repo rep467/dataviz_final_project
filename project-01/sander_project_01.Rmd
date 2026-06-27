@@ -152,7 +152,7 @@ browsable(
 ```{r, warning=FALSE, message=FALSE}
 library(htmlwidgets)
 
-saveWidget(widget=interactive_graph, file = "../figures/project-1-graph-2-interactive-graph-.html", selfcontained = TRUE)
+saveWidget(widget=partial_bundle(interactive_graph), file = "../figures/project-1-graph-2-interactive-graph-.html", selfcontained = TRUE)
 ```
 
 ## Data summary
