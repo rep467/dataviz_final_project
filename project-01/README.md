@@ -10,6 +10,22 @@ The key takeaways: MPG has not increased between 1984 and to around 2010 for car
 
 The report can be found in sander_project_01.html or sander_project_01.md (The md file on github does not display interactive graphs correctly)
 
+### files
+
+- All code for this project is in sander_project_01.Rmd
+- The generated report is in sander_project_01.html (Interactive graphs work in this format)
+- A github friendly version is also available in sander_project_01.md (However, this version does not support the interactive graphs in github)
+
+### data files
+
+The data files are in:
+
+../data/
+
+Used by this project:
+
+- ../data/fuel.csv
+
 ## 1 Interactive Chart
 
 The following interactive boxplot graph was created: *(check out sander_project_01.html for an interactive version)*
