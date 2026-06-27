@@ -8,6 +8,24 @@ In this project, I explored the 2022 data from the FSU Florida Climate Center an
 
 The report can be found in sander_project_03.html or sander_project_03.md (The md file on github does not display interactive graphs correctly)
 
+### files
+
+- All code for this project is in sander_project_03.Rmd
+- The generated report is in sander_project_03.html (Interactive graphs work in this format)
+- A github friendly version is also available in sander_project_03.md (However, this version does not support the interactive graphs in github)
+
+### data files
+
+The data files are in:
+
+../data/
+
+Used by this project:
+
+- ../data/BB_top100_2015.csv
+- ../data/tpa_weather_2022.csv
+
+
 ## 1 Interactive Chart
 
 The following interactive barchart graph was created: *(check out sander_project_03.html for an interactive version)*
