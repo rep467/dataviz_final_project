@@ -4,7 +4,7 @@
 
 ## Mini-Project 2
 
-In this project, I explored data from the Boston marathon 2017. The goal of the project was to explore interactive graphs and spatial visualization. The library ggigraph with geom_sf was used for the graphs. The data included data such as age country of origin and various times.
+In this project, I explored data from the Boston marathon 2017. The goal of the project was to explore interactive graphs and spatial visualization. The library ggigraph with geom_sf was used for the graphs. The data included data such as age, country of origin and various times.
 
 The data seems to have a weak trend that counties and countries with lower participation seem to be doing better then counties and countries with high participation. However, these results can be affected by the very low sample size of countries and counties with low participation. Another possible explanation is that as travel becomes more difficult the remaining participants take the marathon more seriously.
 
@@ -42,7 +42,7 @@ When hovering over the map for each country some additional info will be shown. 
 
 ## 2 Accessibility
 
-For accessibility fig.alt text were included for each graph, and colorblind safe colors and pallets were chosen.(viridis magma and viridis was used other graph were testing using this tool <https://rgblind.com/color-blindness-simulator>)
+For accessibility fig.alt text were included for each graph, and colorblind safe colors and pallets were chosen.(viridis magma and viridis was used other graph were tested using this tool <https://rgblind.com/color-blindness-simulator>)
 
 The library ggigraph did not seem to include the fig.alt text. The following workaround was used:
 
