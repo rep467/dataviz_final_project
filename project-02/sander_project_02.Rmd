@@ -321,6 +321,9 @@ browsable(
 
 Graph 3 shows the same kind of values as Graph 1 but instead of showing those values for the world map, it shows those values for the USA. (Color values represent the same but the scale is different to visualize the differences between the states better). Just like before the location of the marathon, in this graph Massachusetts has with 4586 the most participants. When switching to visualizing the average time, it can clearly be seen that Massachusetts has the longest average time for the marathon (4:27:41) while Alaska has the best average time of 3:25:0 with just 52 participants.
 
+
+**This graph uses the same color pallet as graph 2 to present the same kind of information. However, the scale is different and should not be directly compared to graph 2**
+
 ## saving Graph 3
 
 ```{r, warning=FALSE, message=FALSE}
